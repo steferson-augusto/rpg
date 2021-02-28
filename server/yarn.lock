@@ -53,6 +53,17 @@
     picomatch "^2.2.2"
     slash "^3.0.0"
 
+"@adonisjs/auth@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@adonisjs/auth/-/auth-5.1.1.tgz#b5015bdeab2b2cab8b9c8cc793149325083491a8"
+  integrity sha512-4SX+BMmfJeT/hxrxbQ0h4etIPbmZePI91kYSjyNPSA/llj/EbXatRyq5gGgwPMcw9/EDI3gwv7xa656i5YxnSA==
+  dependencies:
+    "@poppinss/hooks" "^2.0.0"
+    "@poppinss/utils" "^2.5.9"
+    cuid "^2.1.8"
+    luxon "^1.25.0"
+    pluralize "^8.0.0"
+
 "@adonisjs/bodyparser@^5.0.7":
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/@adonisjs/bodyparser/-/bodyparser-5.1.0.tgz#bc3e6cbbc87e4b202e120066dec8dc74a6e2f9df"
@@ -817,6 +828,11 @@ astral-regex@^2.0.0:
   resolved "https://registry.yarnpkg.com/astral-regex/-/astral-regex-2.0.0.tgz#483143c567aeed4785759c0865786dc77d7d2e31"
   integrity sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==
 
+asynckit@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
+  integrity sha1-x57Zf380y48robyXkLzDZkdLS3k=
+
 at-least-node@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/at-least-node/-/at-least-node-1.0.0.tgz#602cd4b46e844ad4effc92a8011a3c46e0238dc2"
@@ -1133,6 +1149,13 @@ colors@^1.1.2:
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
   integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
 
+combined-stream@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
+  integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
+  dependencies:
+    delayed-stream "~1.0.0"
+
 commander@^2.19.0:
   version "2.20.3"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
@@ -1307,6 +1330,11 @@ define-property@^2.0.2:
     is-descriptor "^1.0.2"
     isobject "^3.0.1"
 
+delayed-stream@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
+  integrity sha1-3zrhmayt+31ECqrgsp4icrJOxhk=
+
 depd@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
@@ -1346,12 +1374,13 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
-discord-oauth2-api@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/discord-oauth2-api/-/discord-oauth2-api-1.0.8.tgz#455c3d3be3f1c98218886ca306e7d140b7657bc9"
-  integrity sha512-M0ki9HYq65yQwdgRHpWpPh1+QL4g87hsGEZcT+3spoiQXbIwk5n91sCDs1ECvskQXtPYAfra+sd8jIYr7CyNDQ==
+discord-passport@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/discord-passport/-/discord-passport-1.0.0.tgz#13b67db5d79b8e2c215aafeec40d389bb691fbde"
+  integrity sha512-QtNrqdOGfdsAMivnDWRFO1djB3kSgnRd8PcndH9gmaOlqB4eYR/DyLMHqKV2h3dIcennkVEPlgpU0aLJn+eskA==
   dependencies:
-    node-fetch "^2.6.0"
+    form-data "^4.0.0"
+    node-fetch "^2.6.1"
 
 doctrine@1.5.0:
   version "1.5.0"
@@ -1933,6 +1962,15 @@ for-own@^1.0.0:
   integrity sha1-xjMy9BXO3EsE2/5wz4NklMU8tEs=
   dependencies:
     for-in "^1.0.1"
+
+form-data@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
+  integrity sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "^1.0.8"
+    mime-types "^2.1.12"
 
 forwarded@~0.1.2:
   version "0.1.2"
@@ -2919,7 +2957,7 @@ mime-db@1.46.0:
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.46.0.tgz#6267748a7f799594de3cbc8cde91def349661cee"
   integrity sha512-svXaP8UQRZ5K7or+ZmfNhg2xX3yKDMUzqadsSqi4NCH/KomcH75MAMYAGVlvXn4+b/xOPhS3I2uHKRUzvjY7BQ==
 
-mime-types@^2.1.27, mime-types@~2.1.24:
+mime-types@^2.1.12, mime-types@^2.1.27, mime-types@~2.1.24:
   version "2.1.29"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.29.tgz#1d4ab77da64b91f5f72489df29236563754bb1b2"
   integrity sha512-Y/jMt/S5sR9OaqteJtslsFZKWOIIqMACsJSiHghlCAyhf7jfVYjKBmLiX8OgpWeW+fjJ2b+Az69aPFPkUOY6xQ==
@@ -3072,7 +3110,7 @@ node-emoji@^1.10.0:
   dependencies:
     lodash.toarray "^4.4.0"
 
-node-fetch@^2.6.0:
+node-fetch@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
