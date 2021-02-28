@@ -24,5 +24,8 @@ export default Env.rules({
   DB_PORT: Env.schema.number(),
   DB_USER: Env.schema.string(),
   DB_PASSWORD: Env.schema.string.optional(),
-  DB_NAME: Env.schema.string.optional()
+  DB_NAME: Env.schema.string.optional(),
+  DISCORD_CLIENT_ID: Env.schema.string(),
+  DISCORD_CLIENT_SECRET: Env.schema.string(),
+  GUILD_ID: Env.schema.string()
 })
