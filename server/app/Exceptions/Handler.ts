@@ -15,9 +15,32 @@
 
 import Logger from '@ioc:Adonis/Core/Logger'
 import HttpExceptionHandler from '@ioc:Adonis/Core/HttpExceptionHandler'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class ExceptionHandler extends HttpExceptionHandler {
   constructor() {
     super(Logger)
+  }
+
+  public async handle(error, ctx: HttpContextContract) {
+    if (error.code === 'E_VALIDATION_FAILURE') {
+      return ctx.response.status(422).send(error.messages)
+    } else if (error.message === 'E_DISCORD_UNAUTHORIZED') {
+      return ctx.response.status(401).json([
+        {
+          field: 'general',
+          message: 'Não foi possível se conectar ao seu Discord'
+        }
+      ])
+    } else if (error.message === 'E_DISCORD_NOT_MEMBER') {
+      return ctx.response.status(401).json([
+        {
+          field: 'general',
+          message: 'Você não é membro de nosso servidor'
+        }
+      ])
+    }
+
+    return super.handle(error, ctx)
   }
 }

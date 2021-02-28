@@ -36,10 +36,11 @@
     "youch-terminal": "^1.0.1"
   },
   "dependencies": {
+    "@adonisjs/auth": "^5.1.1",
     "@adonisjs/core": "^5.0.4-preview-rc",
     "@adonisjs/lucid": "^10.0.0",
     "@adonisjs/repl": "^1.0.0",
-    "discord-oauth2-api": "^1.0.8",
+    "discord-passport": "^1.0.0",
     "luxon": "^1.26.0",
     "pg": "^8.5.1",
     "proxy-addr": "^2.0.6",
