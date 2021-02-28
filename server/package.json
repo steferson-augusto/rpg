@@ -1,13 +1,20 @@
 {
   "name": "server",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "build": "node ace build --production",
     "start": "node server.js",
     "dev": "node ace serve --watch",
     "lint": "eslint . --ext=.ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "migrate": "node ace migration:run",
+    "rollback": "node ace migration:rollback",
+    "migration": "node ace make:migration",
+    "controller": "node ace make:controller",
+    "model": "node ace make:model",
+    "seed": "node ace db:seed",
+    "seeder": "node ace make:seeder"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^3.0.0",
@@ -32,6 +39,7 @@
     "@adonisjs/core": "^5.0.4-preview-rc",
     "@adonisjs/lucid": "^10.0.0",
     "@adonisjs/repl": "^1.0.0",
+    "discord-oauth2-api": "^1.0.8",
     "luxon": "^1.26.0",
     "pg": "^8.5.1",
     "proxy-addr": "^2.0.6",
