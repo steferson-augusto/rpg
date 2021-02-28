@@ -5,6 +5,8 @@ Route.get('/', async () => {
   return { hello: 'world' }
 })
 
+Route.get('/login', 'LoginController.index')
+
 Route.get('health', async ({ response }) => {
   const report = await HealthCheck.getReport()
 

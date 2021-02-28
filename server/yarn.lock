@@ -1346,6 +1346,13 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
+discord-oauth2-api@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/discord-oauth2-api/-/discord-oauth2-api-1.0.8.tgz#455c3d3be3f1c98218886ca306e7d140b7657bc9"
+  integrity sha512-M0ki9HYq65yQwdgRHpWpPh1+QL4g87hsGEZcT+3spoiQXbIwk5n91sCDs1ECvskQXtPYAfra+sd8jIYr7CyNDQ==
+  dependencies:
+    node-fetch "^2.6.0"
+
 doctrine@1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-1.5.0.tgz#379dce730f6166f76cefa4e6707a159b02c5a6fa"
@@ -3064,6 +3071,11 @@ node-emoji@^1.10.0:
   integrity sha512-Yt3384If5H6BYGVHiHwTL+99OzJKHhgp82S8/dktEK73T26BazdgZ4JZh92xSVtGNJvz9UbXdNAc5hcrXV42vw==
   dependencies:
     lodash.toarray "^4.4.0"
+
+node-fetch@^2.6.0:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
+  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
 node-modules-regexp@^1.0.0:
   version "1.0.0"
