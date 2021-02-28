@@ -1,23 +1,41 @@
+/* eslint-disable camelcase */
 import React, { createContext, useState, useEffect, useContext } from 'react'
 import api from '../services/api'
 import * as auth from '../services/auth'
 
-interface UserData {
-  email: string
-  id?: number
-  name: string
-  status?: number
+export interface UserData {
+  id: number
+  discordId: string
+  username: string
+  email?: string
+  avatar: string
+  created_at: string
+  updated_at: string
+  remember_me_token?: string | null
 }
 
-interface Response {
+export interface TokenData {
   token: string
+  type: string
+}
+
+interface DiscordData {
+  refresh_token: string
+  scope: string
+  token: string
+  token_type: string
+}
+
+export interface ResponseLogin {
+  discord: DiscordData
+  token: TokenData
   user: UserData
 }
 
 interface AuthContextData {
   signed: boolean
   user: UserData | null
-  signin: (code: string) => Promise<Response>
+  signin: (code: string) => Promise<ResponseLogin>
   signout: () => void
 }
 
@@ -35,9 +53,9 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }, [])
 
-  const signin = async (code: string): Promise<Response> => {
+  const signin = async (code: string): Promise<ResponseLogin> => {
     const response = await auth.signin(code)
-    api.defaults.headers.Authorization = `Bearer ${response?.token}`
+    api.defaults.headers.Authorization = `Bearer ${response?.token.token}`
     setUser(response?.user)
     return response
   }

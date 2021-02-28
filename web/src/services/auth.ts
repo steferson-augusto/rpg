@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ResponseLogin, UserData } from '../contexts/auth'
 import api from './api'
 
 export const TOKEN_KEY = '@RPG'
 
-export const getToken = () => localStorage.getItem(`${TOKEN_KEY}:token`)
+export const getToken = (): string =>
+  localStorage.getItem(`${TOKEN_KEY}:token`) as string
 
-export const getUser = () =>
-  JSON.parse(localStorage.getItem(`${TOKEN_KEY}:user`) as string) ?? null
+export const getUser = (): UserData =>
+  JSON.parse(localStorage.getItem(`${TOKEN_KEY}:user`) as string)
 
-const login = (data: any): void => {
-  console.log(data)
-  localStorage.setItem(`${TOKEN_KEY}:token`, data?.token)
-  localStorage.setItem(`${TOKEN_KEY}:user`, JSON.stringify(data?.user))
+const storeData = (token: string, user: UserData): void => {
+  localStorage.setItem(`${TOKEN_KEY}:token`, token)
+  localStorage.setItem(`${TOKEN_KEY}:user`, JSON.stringify(user))
 }
 
 export const logout = (): void => {
@@ -21,7 +22,7 @@ export const logout = (): void => {
 }
 
 export const signin = async (code: string) => {
-  const response = await api.post('/login', { code })
-  login(response?.data)
-  return response?.data
+  const { data } = await api.post<ResponseLogin>('/login', { code })
+  storeData(data.token.token, data.user)
+  return data
 }
