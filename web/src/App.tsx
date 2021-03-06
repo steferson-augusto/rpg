@@ -9,6 +9,7 @@ import GlobalStyles from './styles/global'
 import theme from './styles/theme'
 import Routes from './routes'
 import { AuthProvider } from './contexts/auth'
+import { DiscordProvider } from './contexts/discord'
 
 const App: React.FC = () => {
   return (
@@ -17,7 +18,9 @@ const App: React.FC = () => {
         <StylesProvider injectFirst>
           <GlobalStyles />
           <AuthProvider>
-            <Routes />
+            <DiscordProvider>
+              <Routes />
+            </DiscordProvider>
           </AuthProvider>
         </StylesProvider>
       </ThemeProvider>
