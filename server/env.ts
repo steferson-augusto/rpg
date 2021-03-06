@@ -27,5 +27,6 @@ export default Env.rules({
   DB_NAME: Env.schema.string.optional(),
   DISCORD_CLIENT_ID: Env.schema.string(),
   DISCORD_CLIENT_SECRET: Env.schema.string(),
-  GUILD_ID: Env.schema.string()
+  GUILD_ID: Env.schema.string(),
+  DISCORD_TOKEN: Env.schema.string()
 })
