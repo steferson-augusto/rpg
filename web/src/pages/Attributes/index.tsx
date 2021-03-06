@@ -1,22 +1,53 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { Container } from './styles'
 import Attribute from '../../components/Attribute'
+import useSwr from '../../hooks/useSWR'
+import { AttributeData } from '../../models'
+import { RollValues } from '../../utils/roll'
+import DialogRoll from '../../components/DialogRoll'
 
-const dices = [
-  { title: 'Força', value: 'd12+6 d12+5 d12 d4 d4' },
-  { title: 'Vigor', value: 'd12+6 d12+5 d12 d4 d4' },
-  { title: 'Agilidade', value: 'd12+6 d12+5 d12 d4 d4' },
-  { title: 'Astúcia', value: 'd12+6 d12+5 d12 d4 d4' },
-  { title: 'Espírito', value: 'd12+6 d12+5 d12 d4 d4' }
-]
+export interface ModalValues extends RollValues {
+  title: string
+  dices: string
+}
 
 const Attributes: React.FC = () => {
+  const { data } = useSwr<AttributeData[]>('/attributes')
+  const [open, setOpen] = useState(false)
+  const [modal, setModal] = useState<ModalValues>({
+    title: '',
+    dices: '',
+    fixed: 0,
+    critical: 0,
+    history: [],
+    total: 0
+  })
+
+  const handleClickOpen = useCallback(
+    (newModal: ModalValues) => {
+      setModal(newModal)
+      setOpen(true)
+    },
+    [open]
+  )
+
+  const handleClose = useCallback(() => {
+    setOpen(false)
+  }, [])
+
   return (
     <Container>
-      {dices.map((dice, index) => (
-        <Attribute key={index} title={dice.title} value={dice.value} />
+      {data?.map(attribute => (
+        <Attribute
+          key={attribute.id}
+          id={attribute.id as number}
+          title={attribute.label}
+          values={attribute.dices}
+          onRoll={handleClickOpen}
+        />
       ))}
+      <DialogRoll open={open} onClose={handleClose} {...modal} />
     </Container>
   )
 }

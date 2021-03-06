@@ -1,5 +1,5 @@
 /* eslint-disable multiline-ternary */
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import produce from 'immer'
 import IconButton from '@material-ui/core/IconButton'
 import CasinoIcon from '@material-ui/icons/Casino'
@@ -7,37 +7,43 @@ import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
+import { Snackbar } from '@material-ui/core'
 
+import { AttributeLabel, DiceData } from '../../models'
+import stages from '../../data/stages'
+import api from '../../services/api'
 import { Container, Dice } from './styles'
 import resumeDices from '../../utils/resumeDices'
-import { Snackbar } from '@material-ui/core'
 import Conditional from '../Conditional'
+import useDebounce from '../../hooks/useDebounce'
+import { useDiscord } from '../../contexts/discord'
+import { ModalValues } from '../../pages/Attributes'
 
 interface AttributeProps {
-  title: string
-  value: string
+  id: number
+  title: AttributeLabel
+  values: DiceData[]
+  onRoll: (modal: ModalValues) => void
 }
 
-const stages = [
-  'd4',
-  'd6',
-  'd8',
-  'd10',
-  'd12',
-  'd12+1',
-  'd12+2',
-  'd12+3',
-  'd12+4',
-  'd12+5',
-  'd12+6'
-]
-
-const Attribute: React.FC<AttributeProps> = ({ title, value }) => {
-  const [dices, setDices] = useState(value.split(' '))
+const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {
+  const [dices, setDices] = useState(values)
+  const isFirstRun = useRef(true)
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState(false)
   const [snackbar, setSnackbar] = useState('')
+  const debounce = useDebounce(dices)
   const sum = useMemo(() => resumeDices(dices), [dices])
+  const { rollAttribute } = useDiscord()
+
+  useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false
+      return
+    }
+
+    api.put(`/attributes/${id}`, { dices })
+  }, [debounce])
 
   const handleUp = useCallback(
     (index: number) => () => {
@@ -117,8 +123,13 @@ const Attribute: React.FC<AttributeProps> = ({ title, value }) => {
     setEditing(prev => !prev)
   }, [editing])
 
+  const handleRoll = useCallback(async () => {
+    const result = await rollAttribute(title, sum)
+    onRoll({ title, dices: sum, ...result })
+  }, [sum])
+
   return (
-    <Container editing={editing} elevation={1}>
+    <Container editing={editing ? 1 : 0} elevation={1}>
       <div className="header">
         <h3 onClick={handleCopyDice}>
           {title}: <span>{sum}</span>
@@ -142,15 +153,18 @@ const Attribute: React.FC<AttributeProps> = ({ title, value }) => {
             <Dice key={index} elevation={2}>
               <Conditional visible={editing}>
                 {dice === 'd4' ? (
-                  <IconButton color="default" onClick={handleDelete(index)}>
-                    <DeleteIcon color="error" fontSize="inherit" />
-                  </IconButton>
-                ) : (
                   <IconButton
                     color="default"
-                    onClick={handleDown(index)}
-                    disabled={dice === 'd4'}
+                    disabled={dices.length === 1}
+                    onClick={handleDelete(index)}
                   >
+                    <DeleteIcon
+                      color={dices.length > 1 ? 'error' : 'disabled'}
+                      fontSize="inherit"
+                    />
+                  </IconButton>
+                ) : (
+                  <IconButton color="default" onClick={handleDown(index)}>
                     <RemoveIcon fontSize="small" />
                   </IconButton>
                 )}
@@ -168,7 +182,7 @@ const Attribute: React.FC<AttributeProps> = ({ title, value }) => {
             </Dice>
           ))}
         </div>
-        <IconButton color="default">
+        <IconButton color="default" onClick={handleRoll}>
           <CasinoIcon fontSize="large" />
         </IconButton>
       </div>
