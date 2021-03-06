@@ -17,7 +17,7 @@ export const Dice = styled(Paper)`
 `
 
 interface ContainerProps {
-  editing: boolean
+  editing: number
 }
 
 export const Container = styled(Paper)<ContainerProps>`
