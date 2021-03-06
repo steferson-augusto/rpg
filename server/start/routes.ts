@@ -12,3 +12,7 @@ Route.get('health', async ({ response }) => {
 
   return report.healthy ? response.ok(report) : response.badRequest(report)
 })
+
+Route.group(() => {
+  Route.resource('attributes', 'AttributesController').only(['index', 'update'])
+}).middleware('auth')
