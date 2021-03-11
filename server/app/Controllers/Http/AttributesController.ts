@@ -15,8 +15,17 @@ type Dice =
   | 'd12+6'
 
 export default class AttributesController {
-  public async index({ auth }: HttpContextContract) {
-    const attributes = await Attribute.query().where({ userId: auth.user?.id })
+  public async show({ params, auth }: HttpContextContract) {
+    let attributes = await Attribute.query().where({ userId: params.id ?? auth.user?.id })
+    if (attributes.length === 0) {
+      attributes = await Attribute.createMany([
+        { userId: params.id, label: 'Agilidade', dices: ['d4'] },
+        { userId: params.id, label: 'Astúcia', dices: ['d4'] },
+        { userId: params.id, label: 'Espírito', dices: ['d4'] },
+        { userId: params.id, label: 'Força', dices: ['d4'] },
+        { userId: params.id, label: 'Vigor', dices: ['d4'] }
+      ])
+    }
     return attributes
   }
 
