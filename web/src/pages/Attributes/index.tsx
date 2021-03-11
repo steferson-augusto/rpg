@@ -6,6 +6,7 @@ import useSwr from '../../hooks/useSWR'
 import { AttributeData } from '../../models'
 import { RollValues } from '../../utils/roll'
 import DialogRoll from '../../components/DialogRoll'
+import { usePlayer } from '../../contexts/player'
 
 export interface ModalValues extends RollValues {
   title: string
@@ -13,7 +14,8 @@ export interface ModalValues extends RollValues {
 }
 
 const Attributes: React.FC = () => {
-  const { data } = useSwr<AttributeData[]>('/attributes')
+  const { selected } = usePlayer()
+  const { data } = useSwr<AttributeData[]>(`/attributes/${selected?.id}`)
   const [open, setOpen] = useState(false)
   const [modal, setModal] = useState<ModalValues>({
     title: '',
