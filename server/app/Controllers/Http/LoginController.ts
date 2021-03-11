@@ -87,7 +87,7 @@ export default class LoginController {
       const isMember = guilds.some((guild) => guild.id === Env.get('GUILD_ID'))
       if (!isMember) throw new Error('E_DISCORD_NOT_MEMBER')
 
-      const user = await User.firstOrCreate({ discordId: discordUser.discordId }, discordUser)
+      const user = await User.updateOrCreate({ discordId: discordUser.discordId }, discordUser)
 
       const storeDiscordToken = await DiscordToken.firstOrNew({ userId: user.id })
       storeDiscordToken.merge(discordToken)
@@ -99,5 +99,11 @@ export default class LoginController {
     } catch (error) {
       throw new Error('E_DISCORD_UNAUTHORIZED')
     }
+  }
+
+  public async session({ auth, request }: HttpContextContract) {
+    const { email, password } = request.only(['email', 'password'])
+    const token = await auth.use('api').attempt(email, password)
+    return token.toJSON()
   }
 }
