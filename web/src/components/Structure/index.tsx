@@ -1,3 +1,4 @@
+/* eslint-disable multiline-ternary */
 import React, { useCallback, useMemo, useRef } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
@@ -13,6 +14,11 @@ import {
   Check,
   Content
 } from './styles'
+import Avatar from '@material-ui/core/Avatar'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import { usePlayer } from '../../contexts/player'
+import { useAuth } from '../../contexts/auth'
 
 interface Titles {
   '/dashboard': string
@@ -29,8 +35,12 @@ const titles: Titles = {
 }
 
 const Structure: React.FC = ({ children }) => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const ref = useRef<HTMLInputElement>(null)
+  const { user } = useAuth()
+  const { selected, players, changeSelected } = usePlayer()
   const location = useLocation()
+  const open = Boolean(anchorEl)
 
   const title = useMemo(() => titles[location.pathname as keyof Titles], [
     location?.pathname
@@ -39,6 +49,20 @@ const Structure: React.FC = ({ children }) => {
   const handleToogleMenu = useCallback(() => {
     if (ref.current !== null) ref.current.checked = !ref.current.checked
   }, [ref])
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = useCallback(
+    (index: number) => () => {
+      if (index >= 0) {
+        changeSelected(index)
+      }
+      setAnchorEl(null)
+    },
+    [changeSelected]
+  )
 
   return (
     <Container>
@@ -57,6 +81,48 @@ const Structure: React.FC = ({ children }) => {
               <h3>{title}</h3>
             </Left>
           </Mark>
+          {user?.isMaster ? (
+            <>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <Avatar
+                  alt={selected?.username}
+                  src={`https://cdn.discordapp.com/avatars/${selected?.discordId}/${selected?.avatar}.png`}
+                />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                open={open}
+                onClose={handleClose(-1)}
+              >
+                {players.map((player, index) => (
+                  <MenuItem key={index} onClick={handleClose(index)}>
+                    {player.username}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </>
+          ) : (
+            <Avatar
+              alt={user?.username}
+              src={`https://cdn.discordapp.com/avatars/${user?.discordId}/${user?.avatar}.png`}
+            />
+          )}
         </Header>
       </AppBar>
 
