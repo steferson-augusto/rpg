@@ -15,6 +15,15 @@ export default class User extends BaseModel {
   @column()
   public avatar: string
 
+  @column({ columnName: 'is_player', serializeAs: 'isPlayer' })
+  public isPlayer: boolean
+
+  @column({ columnName: 'is_master', serializeAs: 'isMaster' })
+  public isMaster: boolean
+
+  @column({ columnName: 'is_bot', serializeAs: 'isBot' })
+  public isBot: boolean
+
   @column()
   public email: string
 
