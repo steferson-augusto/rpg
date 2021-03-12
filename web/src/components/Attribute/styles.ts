@@ -91,3 +91,10 @@ export const Container = styled(Paper)<ContainerProps>`
     }
   }
 `
+
+export const Loading = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+`

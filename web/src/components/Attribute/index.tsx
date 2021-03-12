@@ -7,16 +7,18 @@ import RemoveIcon from '@material-ui/icons/Remove'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import { Snackbar } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { AttributeLabel, DiceData } from '../../models'
 import stages from '../../data/stages'
 import api from '../../services/api'
-import { Container, Dice } from './styles'
+import { Container, Dice, Loading } from './styles'
 import resumeDices from '../../utils/resumeDices'
 import Conditional from '../Conditional'
 import useDebounce from '../../hooks/useDebounce'
 import { useDiscord } from '../../contexts/discord'
 import { ModalValues } from '../../pages/Attributes'
+import { useAuth } from '../../contexts/auth'
 
 interface AttributeProps {
   id: number
@@ -29,11 +31,13 @@ const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {
   const [dices, setDices] = useState(values)
   const isFirstRun = useRef(true)
   const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [editing, setEditing] = useState(false)
   const [snackbar, setSnackbar] = useState('')
   const debounce = useDebounce(dices)
   const sum = useMemo(() => resumeDices(dices), [dices])
   const { rollAttribute } = useDiscord()
+  const { user } = useAuth()
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -123,7 +127,9 @@ const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {
   }, [editing])
 
   const handleRoll = useCallback(async () => {
+    setLoading(true)
     const result = await rollAttribute(title, sum)
+    setLoading(false)
     onRoll({ title, dices: sum, ...result })
   }, [sum])
 
@@ -134,23 +140,25 @@ const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {
           {title}: <span>{sum}</span>
         </h3>
         <div>
-          <IconButton color="default" onClick={handleEditing}>
-            {editing ? (
-              <i className="material-icons">edit_off</i>
-            ) : (
-              <EditIcon fontSize="inherit" />
-            )}
-          </IconButton>
-          <IconButton color="default" onClick={handleAddDice}>
-            <AddIcon fontSize="inherit" />
-          </IconButton>
+          <Conditional visible={Boolean(!user?.isMaster)}>
+            <IconButton color="default" onClick={handleEditing}>
+              {editing ? (
+                <i className="material-icons">edit_off</i>
+              ) : (
+                <EditIcon fontSize="inherit" />
+              )}
+            </IconButton>
+            <IconButton color="default" onClick={handleAddDice}>
+              <AddIcon fontSize="inherit" />
+            </IconButton>
+          </Conditional>
         </div>
       </div>
       <div className="content">
         <div className="dices">
           {dices.map((dice, index) => (
             <Dice key={index} elevation={2}>
-              <Conditional visible={editing}>
+              <Conditional visible={Boolean(editing && !user?.isMaster)}>
                 {dice === 'd4' ? (
                   <IconButton
                     color="default"
@@ -169,7 +177,7 @@ const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {
                 )}
               </Conditional>
               <h4>{dice}</h4>
-              <Conditional visible={editing}>
+              <Conditional visible={Boolean(editing && !user?.isMaster)}>
                 <IconButton
                   color="default"
                   onClick={handleUp(index)}
@@ -181,9 +189,17 @@ const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {
             </Dice>
           ))}
         </div>
-        <IconButton color="default" onClick={handleRoll}>
-          <CasinoIcon fontSize="large" />
-        </IconButton>
+        <Conditional visible={Boolean(!user?.isMaster)}>
+          {loading ? (
+            <Loading>
+              <CircularProgress size={32} color="secondary" />
+            </Loading>
+          ) : (
+            <IconButton color="default" onClick={handleRoll}>
+              <CasinoIcon fontSize="large" />
+            </IconButton>
+          )}
+        </Conditional>
       </div>
       <Snackbar
         anchorOrigin={{
