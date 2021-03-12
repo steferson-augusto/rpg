@@ -1,13 +1,31 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Button } from '@material-ui/core'
+import Lottie from 'lottie-web'
 
-import { Container, Content, Image } from './styles'
+import { BackgroundAnimation, Content, Image } from './styles'
 import DiscordIcon from '../../components/DiscordIcon'
 import DiscordImage from '../../assets/images/bot-image.png'
 
 const Login: React.FC = () => {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (ref?.current) {
+      Lottie.loadAnimation({
+        container: (ref.current as unknown) as Element,
+        loop: true,
+        renderer: 'svg',
+        autoplay: true,
+        animationData: require('../../assets/animations/login.json'),
+        rendererSettings: {
+          preserveAspectRatio: 'xMinYMin slice'
+        }
+      })
+    }
+  }, [])
+
   return (
-    <Container>
+    <BackgroundAnimation ref={ref}>
       <Content>
         <Image src={DiscordImage} />
         <h3>RPGzin</h3>
@@ -21,7 +39,7 @@ const Login: React.FC = () => {
           <span className="text-btn">Login com discord</span>
         </Button>
       </Content>
-    </Container>
+    </BackgroundAnimation>
   )
 }
 
