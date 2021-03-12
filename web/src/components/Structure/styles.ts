@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import Toolbar from '@material-ui/core/Toolbar'
 
 export const Content = styled.div`
-  height: 100%;
+  max-height: calc(100vh - 64px);
   padding: 8px;
   display: flex;
   flex: 1;
@@ -26,10 +26,6 @@ export const Wrapper = styled.div`
   max-height: calc(100vh - 40px);
   display: flex;
   flex-direction: row;
-
-  @media screen and (max-width: 600px) {
-    flex-direction: column-reverse;
-  }
 `
 
 export const Check = styled.input`

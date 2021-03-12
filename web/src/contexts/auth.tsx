@@ -9,6 +9,9 @@ export interface UserData {
   username: string
   email?: string
   avatar: string
+  isBot: boolean
+  isPlayer: boolean
+  isMaster: boolean
   created_at: string
   updated_at: string
   remember_me_token?: string | null

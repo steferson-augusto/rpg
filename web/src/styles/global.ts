@@ -4,9 +4,11 @@ import { darken } from 'polished'
 export default createGlobalStyle`
   :root {
     --bg-color: ${({ theme: { palette } }) => palette.bg[palette.type]};
-    --text-color: ${props => props.theme.palette.text.primary};
-    --primary: ${props => props.theme.palette.primary.main};
-    --secondary: ${props => props.theme.palette.secondary.main};
+    --text-color: ${({ theme: { palette } }) => palette.write[palette.type]};
+    --primary: ${({ theme: { palette } }) => palette.primary[palette.type]};
+    --secondary: ${({ theme: { palette } }) => palette.secondary[palette.type]};
+    --surface-1: ${({ theme: { palette } }) => palette.surface1[palette.type]};
+    --surface-2: ${({ theme: { palette } }) => palette.surface2[palette.type]};
     --bg-header: ${({ theme: { palette } }) => palette.header[palette.type]};
     --bg-sidebar: ${({ theme: { palette } }) => palette.sidebar[palette.type]};
     --sidebar-hover: ${({ theme: { palette } }) => {
@@ -35,5 +37,21 @@ export default createGlobalStyle`
     font-size: 1.6rem;
     color: var(--text-color);
     font-family: sans-serif;
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background: var(--bg-sidebar);
+  }
+
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 10px 10px var(--bg-sidebar);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px var(--bg-color);
+    border: solid 2px transparent;
+    border-radius: 10px;
   }
 `
