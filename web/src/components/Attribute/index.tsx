@@ -1,4 +1,3 @@
-/* eslint-disable multiline-ternary */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import produce from 'immer'
 import IconButton from '@material-ui/core/IconButton'

@@ -1,4 +1,3 @@
-/* eslint-disable multiline-ternary */
 import React, { useCallback, useMemo, useRef } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
