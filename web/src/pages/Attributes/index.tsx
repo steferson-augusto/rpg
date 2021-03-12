@@ -7,6 +7,7 @@ import { AttributeData } from '../../models'
 import { RollValues } from '../../utils/roll'
 import DialogRoll from '../../components/DialogRoll'
 import { usePlayer } from '../../contexts/player'
+import GenericState from '../../components/GenericState'
 
 export interface ModalValues extends RollValues {
   title: string
@@ -15,7 +16,9 @@ export interface ModalValues extends RollValues {
 
 const Attributes: React.FC = () => {
   const { selected } = usePlayer()
-  const { data } = useSwr<AttributeData[]>(`/attributes/${selected?.id}`)
+  const { data, loading, error } = useSwr<AttributeData[]>(
+    `/attributes/${selected?.id}`
+  )
   const [open, setOpen] = useState(false)
   const [modal, setModal] = useState<ModalValues>({
     title: '',
@@ -37,6 +40,8 @@ const Attributes: React.FC = () => {
   const handleClose = useCallback(() => {
     setOpen(false)
   }, [])
+
+  if (loading || error) return <GenericState loading={loading} error={error} />
 
   return (
     <Container>
