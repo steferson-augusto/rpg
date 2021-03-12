@@ -25,6 +25,7 @@ module.exports = {
     'space-before-function-paren': 'off',
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
-    'no-use-before-define': 'off'
+    'no-use-before-define': 'off',
+    'multiline-ternary': 'off'
   }
 }
