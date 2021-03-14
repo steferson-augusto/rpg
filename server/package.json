@@ -24,6 +24,7 @@
     "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.2",
     "adonis-preset-ts": "^2.0.0",
+    "chai-subset": "^1.6.0",
     "eslint": "7.12.1",
     "eslint-config-prettier": "^8.1.0",
     "eslint-config-standard": "^16.0.2",
@@ -45,7 +46,7 @@
   },
   "dependencies": {
     "@adonisjs/auth": "^5.1.1",
-    "@adonisjs/core": "^5.0.4-preview-rc",
+    "@adonisjs/core": "^5.0.4-preview-rc-2.1",
     "@adonisjs/lucid": "^10.0.0",
     "@adonisjs/repl": "^1.0.0",
     "discord-passport": "^1.0.0",
