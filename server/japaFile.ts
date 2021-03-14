@@ -4,6 +4,8 @@ import { join } from 'path'
 import getPort from 'get-port'
 import { configure } from 'japa'
 import sourceMapSupport from 'source-map-support'
+import { Assert } from 'japa/build/src/Assert'
+import chaiSubset from 'chai-subset'
 
 process.env.NODE_ENV = 'testing'
 process.env.ADONIS_ACE_CWD = join(__dirname)
@@ -39,6 +41,8 @@ function getTestFiles() {
 /**
  * Configure test runner
  */
+Assert.use(chaiSubset)
+
 configure({
   files: getTestFiles(),
   before: [runMigrations, startHttpServer],
