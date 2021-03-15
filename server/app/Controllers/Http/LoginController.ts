@@ -1,10 +1,16 @@
 /* eslint-disable camelcase */
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { schema as Schema } from '@ioc:Adonis/Core/Validator'
 import Env from '@ioc:Adonis/Core/Env'
 import Passport from 'discord-passport'
 
 import User from 'App/Models/User'
 import DiscordToken from 'App/Models/DiscordToken'
+
+const schema = Schema.create({ email: Schema.string(), password: Schema.string() })
+const messages = {
+  required: 'Campo obrigatório'
+}
 
 interface UserResponse {
   avatar: string
@@ -47,29 +53,28 @@ interface PassportResponse {
   user: UserResponse
   state: unknown
 }
+
+export const passportToValues = (passport: PassportResponse) => {
+  const { guilds, user, options, client_id, code, redirect_uri, state, ...token } = passport
+
+  const {
+    id: discordId,
+    discriminator,
+    flags,
+    locale,
+    mfa_enabled,
+    public_flags,
+    verified,
+    ...discord
+  } = user
+
+  const discordUser = { ...discord, discordId }
+  const { expires_in, scope, ...restToken } = token
+  const discordToken = { ...restToken, scope: scope.join(' ') }
+
+  return { discordUser, discordToken, guilds }
+}
 export default class LoginController {
-  private passportToValues(passport: PassportResponse) {
-    const { guilds, user, options, client_id, code, redirect_uri, state, ...token } = passport
-
-    const {
-      id: discordId,
-      discriminator,
-      flags,
-      locale,
-      mfa_enabled,
-      public_flags,
-      verified,
-      ...discord
-    } = user
-
-    const discordUser = { ...discord, discordId }
-
-    const { expires_in, scope, ...restToken } = token
-    const discordToken = { ...restToken, scope: scope.join(' ') }
-
-    return { discordUser, discordToken, guilds }
-  }
-
   public async index({ auth, request }: HttpContextContract) {
     try {
       const { code } = request.only(['code'])
@@ -82,7 +87,7 @@ export default class LoginController {
       })
 
       await passport.open()
-      const { discordToken, discordUser, guilds } = this.passportToValues(passport)
+      const { discordToken, discordUser, guilds } = passportToValues(passport)
 
       const isMember = guilds.some((guild) => guild.id === Env.get('GUILD_ID'))
       if (!isMember) throw new Error('E_DISCORD_NOT_MEMBER')
@@ -102,7 +107,7 @@ export default class LoginController {
   }
 
   public async session({ auth, request }: HttpContextContract) {
-    const { email, password } = request.only(['email', 'password'])
+    const { email, password } = await request.validate({ schema, messages })
     const token = await auth.use('api').attempt(email, password)
     return token.toJSON()
   }
