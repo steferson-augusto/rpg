@@ -86,7 +86,7 @@
   dependencies:
     "@poppinss/utils" "^2.5.9"
 
-"@adonisjs/core@^5.0.4-preview-rc-2.1":
+"@adonisjs/core@^5.0.4-preview-rc":
   version "5.0.4-preview-rc-2.1"
   resolved "https://registry.yarnpkg.com/@adonisjs/core/-/core-5.0.4-preview-rc-2.1.tgz#fa4e4b17d45c5169e618bf3bec17cc2b87cb18e3"
   integrity sha512-eish//EnR6q4q++OYYndPZ4KHuarj3qAqLs05wFQqEOdLOYqVDxRdF77TeJ7yS5rh8ZzOnYGcRsGlSW/Ln29rQ==
