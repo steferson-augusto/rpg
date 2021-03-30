@@ -136,19 +136,27 @@ const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {
   return (
     <Container editing={editing ? 1 : 0} elevation={1}>
       <div className="header">
-        <h3 onClick={handleCopyDice}>
-          {title}: <span>{sum}</span>
+        <h3 onClick={handleCopyDice} data-testid="attr-label">
+          {title}: <span data-testid="attr-resume">{sum}</span>
         </h3>
         <div>
           <Conditional visible={Boolean(!user?.isMaster)}>
-            <IconButton color="default" onClick={handleEditing}>
+            <IconButton
+              color="default"
+              onClick={handleEditing}
+              data-testid="btn-edit"
+            >
               {editing ? (
                 <i className="material-icons">edit_off</i>
               ) : (
                 <EditIcon fontSize="inherit" />
               )}
             </IconButton>
-            <IconButton color="default" onClick={handleAddDice}>
+            <IconButton
+              color="default"
+              onClick={handleAddDice}
+              data-testid="btn-add"
+            >
               <AddIcon fontSize="inherit" />
             </IconButton>
           </Conditional>
@@ -164,6 +172,7 @@ const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {
                     color="default"
                     disabled={dices.length === 1}
                     onClick={handleDelete(index)}
+                    data-testid="btn-delete"
                   >
                     <DeleteIcon
                       color={dices.length > 1 ? 'error' : 'disabled'}
@@ -171,17 +180,22 @@ const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {
                     />
                   </IconButton>
                 ) : (
-                  <IconButton color="default" onClick={handleDown(index)}>
+                  <IconButton
+                    color="default"
+                    onClick={handleDown(index)}
+                    data-testid="btn-minus"
+                  >
                     <RemoveIcon fontSize="small" />
                   </IconButton>
                 )}
               </Conditional>
-              <h4>{dice}</h4>
+              <h4 data-testid="attr-dice">{dice}</h4>
               <Conditional visible={Boolean(editing && !user?.isMaster)}>
                 <IconButton
                   color="default"
                   onClick={handleUp(index)}
                   disabled={dice === 'd12+6'}
+                  data-testid="btn-plus"
                 >
                   <AddIcon fontSize="small" />
                 </IconButton>
@@ -195,7 +209,11 @@ const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {
               <CircularProgress size={32} color="secondary" />
             </Loading>
           ) : (
-            <IconButton color="default" onClick={handleRoll}>
+            <IconButton
+              color="default"
+              onClick={handleRoll}
+              data-testid="btn-roll"
+            >
               <CasinoIcon fontSize="large" />
             </IconButton>
           )}
@@ -210,6 +228,7 @@ const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         message={snackbar}
+        data-testid="snackbar"
       />
     </Container>
   )

@@ -27,7 +27,13 @@ client.on('ready', async () => {
         isMaster
       }
 
-      if (isPlayer || isMaster) await api.post('/users', data)
+      if (isPlayer || isMaster) {
+        try {
+          await api.post('/users', data)
+        } catch (error) {
+          console.log(error.response.data)
+        }
+      }
     }
   }
 
