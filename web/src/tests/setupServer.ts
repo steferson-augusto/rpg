@@ -21,6 +21,34 @@ const server = setupServer(
   rest.put(`${baseURL}/attributes/undefined`, (req, res, ctx) => {
     return res(ctx.status(200))
   }),
+  rest.post(`${baseURL}/login`, (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        user: {
+          id: 12345,
+          discordId: '123456',
+          username: 'username',
+          avatar: 'avatar',
+          isBot: false,
+          isPlayer: true,
+          isMaster: false,
+          created_at: 'yesterday',
+          updated_at: 'today'
+        },
+        token: {
+          token: 'token test',
+          type: 'bearer'
+        },
+        discord: {
+          refresh_token: 'five minutes',
+          scope: 'scope1 scope2',
+          token: 'discord token test',
+          token_type: 'bearer'
+        }
+      })
+    )
+  }),
   rest.get('*', (req, res, ctx) => {
     console.error(`Please add request handler for ${req.url.toString()}`)
     return res(
