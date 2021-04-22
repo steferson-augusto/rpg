@@ -11,6 +11,7 @@ import Routes from './routes'
 import { AuthProvider } from './contexts/auth'
 import { DiscordProvider } from './contexts/discord'
 import { PlayerProvider } from './contexts/player'
+import { SnackbarProvider } from './contexts/snackbar'
 
 const App: React.FC = () => {
   return (
@@ -21,7 +22,9 @@ const App: React.FC = () => {
           <AuthProvider>
             <DiscordProvider>
               <PlayerProvider>
-                <Routes />
+                <SnackbarProvider>
+                  <Routes />
+                </SnackbarProvider>
               </PlayerProvider>
             </DiscordProvider>
           </AuthProvider>
