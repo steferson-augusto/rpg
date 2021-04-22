@@ -11,6 +11,8 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@unform/core": "^2.1.6",
+    "@unform/web": "^2.1.6",
     "axios": "^0.21.1",
     "discord.js": "^12.5.1",
     "immer": "^8.0.1",
