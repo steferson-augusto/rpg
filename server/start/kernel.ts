@@ -42,5 +42,6 @@ Server.middleware.registerNamed({
   auth: 'App/Middleware/Auth',
   bot: 'App/Middleware/Bot',
   master: 'App/Middleware/Master',
-  member: 'App/Middleware/Member'
+  member: 'App/Middleware/Member',
+  player: 'App/Middleware/Player'
 })
