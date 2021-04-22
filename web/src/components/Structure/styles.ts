@@ -86,7 +86,7 @@ export const Left = styled.div`
     text-transform: uppercase;
     font-size: 22px;
     font-weight: 900;
-    color: var(--header-text);
+    color: var(--text-color);
   }
 `
 
