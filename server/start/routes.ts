@@ -17,7 +17,13 @@ Route.get('health', async ({ response }) => {
 Route.group(() => {
   Route.group(() => {
     Route.resource('attributes', 'AttributesController').only(['show', 'update'])
+
+    Route.get('/skills/user/:id', 'SkillsController.getSkillsByUser')
   }).middleware('member')
+
+  Route.group(() => {
+    Route.resource('skills', 'SkillsController').only(['store', 'update'])
+  }).middleware('player')
 
   Route.group(() => {
     Route.resource('users', 'UsersController').only(['store'])
