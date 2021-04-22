@@ -24,13 +24,15 @@ interface Titles {
   '/atributos': string
   '/pericias': string
   '/itens': string
+  '/macros': string
 }
 
 const titles: Titles = {
   '/dashboard': 'DASHBOARD',
   '/atributos': 'ATRIBUTOS',
   '/pericias': 'PERÍCIAS',
-  '/itens': 'ITENS'
+  '/itens': 'ITENS',
+  '/macros': 'MACROS'
 }
 
 const Structure: React.FC = ({ children }) => {
@@ -69,7 +71,7 @@ const Structure: React.FC = ({ children }) => {
         <Header>
           <IconButton
             edge="start"
-            color="inherit"
+            color="default"
             aria-label="menu"
             onClick={handleToogleMenu}
           >
@@ -143,6 +145,10 @@ const Structure: React.FC = ({ children }) => {
           <NavLink to="/itens" className="link">
             <i className="material-icons">backpack</i>
             <span>Itens</span>
+          </NavLink>
+          <NavLink to="/macros" className="link">
+            <i className="material-icons">smart_toy</i>
+            <span>Macros</span>
           </NavLink>
         </Sidebar>
         <Content>{children}</Content>
