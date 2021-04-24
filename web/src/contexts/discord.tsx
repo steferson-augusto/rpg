@@ -40,6 +40,7 @@ interface DiscordContextData {
     attribute: AttributeLabel,
     label: string
   ) => Promise<RollValues>
+  rollSkill: (skill: string, dices: string) => Promise<RollValues>
 }
 
 const DiscordContext = createContext<DiscordContextData>(
@@ -83,8 +84,34 @@ export const DiscordProvider: React.FC = ({ children }) => {
     return result
   }
 
+  const rollSkill = async (skill: string, label: string) => {
+    const result = roll(label.split(' '))
+    const { total, fixed, critical, history } = result
+    const avatarUrl = `https://cdn.discordapp.com/avatars/${user?.discordId}/${user?.avatar}.png`
+
+    const hook = new Webhook.Webhook(
+      process.env.REACT_APP_DISCORD_WEBHOOK as string
+    )
+
+    const msg = new Webhook.MessageBuilder()
+      .setName(user?.username ?? '')
+      .setAvatar(avatarUrl)
+      .setThumbnail('https://i.imgur.com/oXDWbky.png')
+      .setColor('#aabbcc')
+      .setTitle(skill)
+      .addField('Dados', label, false)
+      .addField('Rolagem', `[${history.join(' ')}]`, true)
+      .addField('Critico', String(critical), true)
+      .addField('Fixo', String(fixed), true)
+      .addField('Total', String(total), false)
+      .setTime()
+
+    await hook.send(msg)
+    return result
+  }
+
   return (
-    <DiscordContext.Provider value={{ rollAttribute }}>
+    <DiscordContext.Provider value={{ rollAttribute, rollSkill }}>
       {children}
     </DiscordContext.Provider>
   )
