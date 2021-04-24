@@ -1,45 +1,29 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef } from 'react'
 
 import { Container } from './styles'
 import Attribute from '../../components/Attribute'
 import useSwr from '../../hooks/useSWR'
 import { AttributeData } from '../../models'
-import { RollValues } from '../../utils/roll'
-import DialogRoll from '../../components/DialogRoll'
+import DialogRoll, {
+  DialogRollHandles,
+  DialogValues
+} from '../../components/DialogRoll'
 import { usePlayer } from '../../contexts/player'
 import GenericState from '../../components/GenericState'
 
-export interface ModalValues extends RollValues {
-  title: string
-  dices: string
-}
-
 const Attributes: React.FC = () => {
+  const dialogRef = useRef<DialogRollHandles>(null)
   const { selected } = usePlayer()
   const { data, loading, error } = useSwr<AttributeData[]>(
     `/attributes/${selected?.id}`
   )
-  const [open, setOpen] = useState(false)
-  const [modal, setModal] = useState<ModalValues>({
-    title: '',
-    dices: '',
-    fixed: 0,
-    critical: 0,
-    history: [],
-    total: 0
-  })
 
   const handleClickOpen = useCallback(
-    (newModal: ModalValues) => {
-      setModal(newModal)
-      setOpen(true)
+    (newModal: DialogValues) => {
+      dialogRef?.current?.open(newModal)
     },
-    [open]
+    [open, dialogRef.current]
   )
-
-  const handleClose = useCallback(() => {
-    setOpen(false)
-  }, [])
 
   if (loading || error) return <GenericState loading={loading} error={error} />
 
@@ -54,7 +38,7 @@ const Attributes: React.FC = () => {
           onRoll={handleClickOpen}
         />
       ))}
-      <DialogRoll open={open} onClose={handleClose} {...modal} />
+      <DialogRoll ref={dialogRef} />
     </Container>
   )
 }

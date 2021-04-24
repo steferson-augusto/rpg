@@ -1,54 +1,81 @@
-import React from 'react'
+import React, {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useState
+} from 'react'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
 
 import { RollValues } from '../../utils/roll'
 import { Content } from './styles'
 
-interface DialogRollProps extends RollValues {
-  open: boolean
+export interface DialogValues extends RollValues {
   title: string
   dices: string
-  onClose: () => void
 }
 
-const DialogRoll: React.FC<DialogRollProps> = props => {
-  const { onClose, open, title, dices, fixed, critical, history, total } = props
+export interface DialogRollHandles {
+  open: (values: DialogValues) => void
+  close: () => void
+}
 
-  const handleClose = () => {
-    onClose()
-  }
+const DialogRoll: React.ForwardRefRenderFunction<DialogRollHandles> = (
+  props,
+  ref
+) => {
+  const [open, setOpen] = useState(false)
+  const [values, setValues] = useState<DialogValues>({
+    title: '',
+    dices: '',
+    fixed: 0,
+    critical: 0,
+    history: [],
+    total: 0
+  })
+
+  const handleClose = useCallback(() => {
+    setOpen(false)
+  }, [])
+
+  useImperativeHandle(ref, () => ({
+    open: values => {
+      setValues(values)
+      setOpen(true)
+    },
+    close: handleClose
+  }))
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="dialog-title" open={open}>
-      <DialogTitle id="dialog-title">{title}</DialogTitle>
+      <DialogTitle id="dialog-title">{values.title}</DialogTitle>
 
       <Content>
         <div className="row">
           <h4>Dados</h4>
-          <p>{dices}</p>
+          <p>{values.dices}</p>
         </div>
         <div className="row">
           <h4>Rolagem</h4>
-          <p>{`[${history.join(', ')}]`}</p>
+          <p>{`[${values.history.join(', ')}]`}</p>
         </div>
         <div className="row inline">
           <div>
             <h4>Crítico</h4>
-            <p>{critical}</p>
+            <p>{values.critical}</p>
           </div>
           <div>
             <h4>Fixo</h4>
-            <p>{fixed}</p>
+            <p>{values.fixed}</p>
           </div>
         </div>
         <div className="row">
           <h4>Resultado</h4>
-          <h3>{total}</h3>
+          <h3>{values.total}</h3>
         </div>
       </Content>
     </Dialog>
   )
 }
 
-export default DialogRoll
+export default forwardRef(DialogRoll)
