@@ -22,7 +22,7 @@ Route.group(() => {
   }).middleware('member')
 
   Route.group(() => {
-    Route.resource('skills', 'SkillsController').only(['store', 'update'])
+    Route.resource('skills', 'SkillsController').only(['store', 'update', 'destroy'])
   }).middleware('player')
 
   Route.group(() => {

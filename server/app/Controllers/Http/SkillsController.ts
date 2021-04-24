@@ -23,11 +23,8 @@ const schema = Schema.create({
 })
 
 const schemaUpdate = Schema.create({
-  label: Schema.string.optional({}, [
-    rules.minLength(3),
-    rules.maxLength(30),
-    rules.requiredIfNotExists('dices')
-  ]),
+  label: Schema.string.optional({}, [rules.minLength(3), rules.maxLength(30)]),
+  pinned: Schema.boolean.optional(),
   dices: Schema.enumSet.optional([
     'd4',
     'd6',
@@ -60,7 +57,7 @@ export default class SkillsController {
         .send([{ field: 'general', message: 'Este usuário não é um player' }])
     }
 
-    const skills = await Skill.query().where({ userId })
+    const skills = await Skill.query().where({ userId }).orderBy('label', 'asc')
     return skills
   }
 
@@ -95,5 +92,30 @@ export default class SkillsController {
     skill.merge(data)
     await skill.save()
     return skill
+  }
+
+  public async destroy({ auth, params, response }: HttpContextContract) {
+    const skill = await Skill.find(params.id)
+
+    if (!skill) {
+      return response.status(422).send([
+        {
+          field: 'general',
+          message: 'Esta perícia não existe'
+        }
+      ])
+    }
+
+    if (skill.userId !== auth.user?.id) {
+      return response.status(401).send([
+        {
+          field: 'general',
+          message: 'Você pode alterar apenas as suas perícias'
+        }
+      ])
+    }
+
+    await skill.delete()
+    return response.status(204)
   }
 }
