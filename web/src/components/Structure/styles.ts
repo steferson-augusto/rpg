@@ -3,7 +3,6 @@ import Toolbar from '@material-ui/core/Toolbar'
 
 export const Content = styled.div`
   max-height: calc(100vh - 64px);
-  padding: 8px;
   display: flex;
   flex: 1;
   transition: 0.5s;

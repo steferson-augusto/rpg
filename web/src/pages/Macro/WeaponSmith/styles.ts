@@ -5,6 +5,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 8px;
 
   .form {
     width: 100%;
@@ -29,7 +30,7 @@ export const Container = styled.div`
     padding: 12px 0;
 
     p {
-      min-width: 200px;
+      min-width: 170px;
       padding: 0 4px;
       text-align: center;
     }
