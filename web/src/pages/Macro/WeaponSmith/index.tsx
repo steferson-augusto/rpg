@@ -59,7 +59,7 @@ const WeaponSmith: React.FC = () => {
       if (total >= difficulty) {
         success = success + 1
         const quality = Math.floor(
-          ((total + weight) / 125) * (125 + total + weight)
+          ((total + weight) / 125) * (125 * grade + total + weight)
         )
         const sum = list.get(quality) || 0
         list.set(quality, sum + 1)
