@@ -19,10 +19,11 @@ Route.group(() => {
     Route.resource('attributes', 'AttributesController').only(['show', 'update'])
 
     Route.get('/skills/user/:id', 'SkillsController.getSkillsByUser')
+    Route.resource('skills', 'SkillsController').only(['index', 'store', 'update'])
   }).middleware('member')
 
   Route.group(() => {
-    Route.resource('skills', 'SkillsController').only(['store', 'update', 'destroy'])
+    Route.resource('skills', 'SkillsController').only(['destroy'])
   }).middleware('player')
 
   Route.group(() => {
@@ -31,5 +32,6 @@ Route.group(() => {
 
   Route.group(() => {
     Route.resource('users', 'UsersController').only(['index'])
+    Route.put('/skills/:id/power-points', 'SkillsController.updatePowerPoints')
   }).middleware('master')
 }).middleware('auth')

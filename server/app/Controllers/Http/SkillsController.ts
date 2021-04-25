@@ -19,7 +19,8 @@ const schema = Schema.create({
     'd12+6'
   ]),
   powerPoints: Schema.number.optional(),
-  pinned: Schema.boolean.optional()
+  pinned: Schema.boolean.optional(),
+  userId: Schema.number.optional([rules.exists({ table: 'users', column: 'id' })])
 })
 
 const schemaUpdate = Schema.create({
@@ -40,14 +41,24 @@ const schemaUpdate = Schema.create({
   ])
 })
 
-const messagesStore = {
+const schemaPowerPoints = Schema.create({
+  powerPoints: Schema.number()
+})
+
+const messages = {
   required: 'Campo obrigatório',
   enumSet: 'Insira um dado válido',
   minLength: 'Deve haver pelo menos {{ options.minLength }} caracteres',
-  requiredIfNotExists: 'Insira um nome ou dados válidos'
+  requiredIfNotExists: 'Insira um nome ou dados válidos',
+  exists: 'Este usuário não existe'
 }
 
 export default class SkillsController {
+  public async index() {
+    const skills = await Skill.query().select('label').distinct().orderBy('label')
+    return skills
+  }
+
   public async getSkillsByUser({ params, auth, response }: HttpContextContract) {
     const userId = Number(auth.user?.isMaster ? params.id : auth.user?.id)
     const user = await User.find(userId)
@@ -62,13 +73,23 @@ export default class SkillsController {
   }
 
   public async store({ request, auth }: HttpContextContract) {
-    const data = await request.validate({ schema, messages: messagesStore })
-    const skill = await Skill.create({ ...data, userId: auth.user?.id })
+    const data = await request.validate({ schema, messages })
+    const values = auth.user?.isMaster
+      ? {
+          ...data,
+          userId: request.input('userId')
+        }
+      : {
+          ...data,
+          userId: auth.user?.id,
+          powerPoints: 0
+        }
+    const skill = await Skill.create(values)
     return skill
   }
 
   public async update({ request, auth, params, response }: HttpContextContract) {
-    const data = await request.validate({ schema: schemaUpdate, messages: messagesStore })
+    const data = await request.validate({ schema: schemaUpdate, messages })
     const skill = await Skill.find(params.id)
 
     if (!skill) {
@@ -80,7 +101,7 @@ export default class SkillsController {
       ])
     }
 
-    if (skill.userId !== auth.user?.id) {
+    if (!auth.user?.isMaster && skill.userId !== auth.user?.id) {
       return response.status(401).send([
         {
           field: 'general',
@@ -90,6 +111,24 @@ export default class SkillsController {
     }
 
     skill.merge(data)
+    await skill.save()
+    return skill
+  }
+
+  public async updatePowerPoints({ request, params, response }: HttpContextContract) {
+    const { powerPoints } = await request.validate({ schema: schemaPowerPoints, messages })
+    const skill = await Skill.find(params.id)
+
+    if (!skill) {
+      return response.status(422).send([
+        {
+          field: 'general',
+          message: 'Esta perícia não existe'
+        }
+      ])
+    }
+
+    skill.powerPoints = powerPoints
     await skill.save()
     return skill
   }
