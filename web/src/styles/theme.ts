@@ -67,6 +67,11 @@ const theme = createMuiTheme({
       root: {
         backgroundColor: '#222222'
       }
+    },
+    MuiMenu: {
+      paper: {
+        backgroundColor: '#333333'
+      }
     }
   }
 })

@@ -39,6 +39,10 @@ export default createGlobalStyle`
     font-family: sans-serif;
   }
 
+  .MuiAutocomplete-popper > div {
+      background-color: var(--surface-2);
+    }
+
   &::-webkit-scrollbar {
     width: 10px;
     height: 10px;

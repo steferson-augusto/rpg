@@ -12,7 +12,7 @@ export const Container = styled.div`
   .image {
     position: relative;
     width: 100%;
-    max-width: 300px;
+    max-width: 250px;
 
     &:after {
       content: '';
