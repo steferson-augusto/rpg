@@ -17,14 +17,14 @@ import resumeDices from '../../utils/resumeDices'
 import Conditional from '../Conditional'
 import useDebounce from '../../hooks/useDebounce'
 import { useDiscord } from '../../contexts/discord'
-import { ModalValues } from '../../pages/Attributes'
 import { useAuth } from '../../contexts/auth'
+import { DialogValues } from '../DialogRoll'
 
 interface AttributeProps {
   id: number
   title: AttributeLabel
   values: DiceData[]
-  onRoll: (modal: ModalValues) => void
+  onRoll: (modal: DialogValues) => void
 }
 
 const Attribute: React.FC<AttributeProps> = ({ title, values, id, onRoll }) => {

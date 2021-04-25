@@ -1,6 +1,6 @@
 {
-  "name": "minha-odc",
-  "version": "0.1.0",
+  "name": "rpg",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
@@ -11,6 +11,9 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "@unform/core": "^2.1.6",
+    "@unform/web": "^2.1.6",
     "axios": "^0.21.1",
     "discord.js": "^12.5.1",
     "immer": "^8.0.1",

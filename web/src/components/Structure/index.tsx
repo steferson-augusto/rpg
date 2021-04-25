@@ -24,19 +24,21 @@ interface Titles {
   '/atributos': string
   '/pericias': string
   '/itens': string
+  '/macros': string
 }
 
 const titles: Titles = {
   '/dashboard': 'DASHBOARD',
   '/atributos': 'ATRIBUTOS',
   '/pericias': 'PERÍCIAS',
-  '/itens': 'ITENS'
+  '/itens': 'ITENS',
+  '/macros': 'MACROS'
 }
 
 const Structure: React.FC = ({ children }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const ref = useRef<HTMLInputElement>(null)
-  const { user } = useAuth()
+  const { user, signout } = useAuth()
   const { selected, players, changeSelected } = usePlayer()
   const location = useLocation()
   const open = Boolean(anchorEl)
@@ -63,13 +65,17 @@ const Structure: React.FC = ({ children }) => {
     [changeSelected]
   )
 
+  const handleLogout = useCallback(() => {
+    signout()
+  }, [])
+
   return (
     <Container>
       <AppBar position="static">
         <Header>
           <IconButton
             edge="start"
-            color="inherit"
+            color="default"
             aria-label="menu"
             onClick={handleToogleMenu}
           >
@@ -80,48 +86,48 @@ const Structure: React.FC = ({ children }) => {
               <h3>{title}</h3>
             </Left>
           </Mark>
-          {user?.isMaster ? (
-            <>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
+
+          <>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              {user?.isMaster ? (
                 <Avatar
                   alt={selected?.username}
                   src={`https://cdn.discordapp.com/avatars/${selected?.discordId}/${selected?.avatar}.png`}
                 />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
-                open={open}
-                onClose={handleClose(-1)}
-              >
-                {players.map((player, index) => (
-                  <MenuItem key={index} onClick={handleClose(index)}>
-                    {player.username}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </>
-          ) : (
-            <Avatar
-              alt={user?.username}
-              src={`https://cdn.discordapp.com/avatars/${user?.discordId}/${user?.avatar}.png`}
-            />
-          )}
+              ) : (
+                <Avatar
+                  alt={user?.username}
+                  src={`https://cdn.discordapp.com/avatars/${user?.discordId}/${user?.avatar}.png`}
+                />
+              )}
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              getContentAnchorEl={null}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center'
+              }}
+              style={{ marginTop: -12 }}
+              keepMounted
+              open={open}
+              onClose={handleClose(-1)}
+            >
+              {players.map((player, index) => (
+                <MenuItem key={index} onClick={handleClose(index)}>
+                  {player.username}
+                </MenuItem>
+              ))}
+              <MenuItem onClick={handleLogout}>Sair</MenuItem>
+            </Menu>
+          </>
         </Header>
       </AppBar>
 
@@ -143,6 +149,10 @@ const Structure: React.FC = ({ children }) => {
           <NavLink to="/itens" className="link">
             <i className="material-icons">backpack</i>
             <span>Itens</span>
+          </NavLink>
+          <NavLink to="/macros" className="link">
+            <i className="material-icons">smart_toy</i>
+            <span>Macros</span>
           </NavLink>
         </Sidebar>
         <Content>{children}</Content>

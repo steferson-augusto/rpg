@@ -1,7 +1,8 @@
 import { createMuiTheme } from '@material-ui/core/styles'
 
-const primary = '#5e35b1'
-const secondary = '#018786'
+// const primary = '#5e35b1'
+const primary = '#BB86FC'
+const secondary = '#03DAC6'
 
 const theme = createMuiTheme({
   palette: {
@@ -15,6 +16,12 @@ const theme = createMuiTheme({
       main: secondary,
       dark: '#03DAC6',
       light: '#018786'
+      // light: '#018786'
+    },
+    error: {
+      main: '#CF6679',
+      dark: '#CF6679',
+      light: '#CF6679'
     },
     header: {
       main: '#1F1F1F',
@@ -51,11 +58,21 @@ const theme = createMuiTheme({
     htmlFontSize: 10
   },
   overrides: {
-    // MuiDrawer: {
-    //   paper: {
-    //     background: '#E5E5E5'
-    //   }
-    // }
+    MuiDrawer: {
+      paper: {
+        background: '#222222'
+      }
+    },
+    MuiPaper: {
+      root: {
+        backgroundColor: '#222222'
+      }
+    },
+    MuiMenu: {
+      paper: {
+        backgroundColor: '#333333'
+      }
+    }
   }
 })
 
