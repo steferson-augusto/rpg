@@ -40,4 +40,20 @@ client.on('ready', async () => {
   console.log(`Logged in as ${client?.user?.tag}!`)
 })
 
+client.on('guildMemberUpdate', async (_, newMember) => {
+  const isPlayer = newMember.roles.cache.has(
+    process.env.PLAYER_ROLE_ID as string
+  )
+  const isMaster = newMember.roles.cache.has(
+    process.env.MASTER_ROLE_ID as string
+  )
+
+  try {
+    await api.put(`/users/${newMember.id}/roles`, { isPlayer, isMaster })
+    console.info('Permissões de usuário atualizadas com sucesso')
+  } catch {
+    console.error('Falha ao atualizar permissões do usuário')
+  }
+})
+
 client.login(process.env.DISCORD_TOKEN)
