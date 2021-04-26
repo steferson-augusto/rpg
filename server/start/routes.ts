@@ -28,6 +28,7 @@ Route.group(() => {
 
   Route.group(() => {
     Route.resource('users', 'UsersController').only(['store'])
+    Route.put('/users/:discordId/roles', 'UsersController.updateRoles')
   }).middleware('bot')
 
   Route.group(() => {

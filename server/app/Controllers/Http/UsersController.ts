@@ -23,4 +23,12 @@ export default class UsersController {
     const user = await User.updateOrCreate({ discordId: data.discordId }, data)
     return user
   }
+
+  public async updateRoles({ request, response, params }: HttpContextContract) {
+    const data = request.only(['isPlayer', 'isMaster'])
+    const user = await User.findByOrFail('discordId', params.discordId)
+    user.merge(data)
+    await user.save()
+    return response.status(204)
+  }
 }
