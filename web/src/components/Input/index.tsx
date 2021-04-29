@@ -13,6 +13,9 @@ type InputProps = Merge<
     minWidth?: number
     min?: number
     max?: number
+    maxLength?: number
+    minLength?: number
+    step?: string
   }
 >
 
@@ -22,6 +25,9 @@ const Input: React.FC<InputProps> = ({
   max,
   maxWidth,
   minWidth,
+  maxLength,
+  minLength,
+  step,
   ...rest
 }) => {
   const inputRef = useRef(null)
@@ -54,7 +60,7 @@ const Input: React.FC<InputProps> = ({
         maxWidth: maxWidth ?? '100%',
         minWidth: minWidth ?? maxWidth ?? 150
       }}
-      inputProps={{ min, max }}
+      inputProps={{ min, max, minLength, maxLength, step }}
       {...rest}
       inputRef={inputRef}
     />
