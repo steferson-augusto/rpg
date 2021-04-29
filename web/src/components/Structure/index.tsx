@@ -23,7 +23,7 @@ interface Titles {
   '/dashboard': string
   '/atributos': string
   '/pericias': string
-  '/itens': string
+  '/inventario': string
   '/macros': string
 }
 
@@ -31,7 +31,7 @@ const titles: Titles = {
   '/dashboard': 'DASHBOARD',
   '/atributos': 'ATRIBUTOS',
   '/pericias': 'PERÍCIAS',
-  '/itens': 'ITENS',
+  '/inventario': 'INVENTÁRIO',
   '/macros': 'MACROS'
 }
 
@@ -146,9 +146,9 @@ const Structure: React.FC = ({ children }) => {
             <i className="material-icons">directions_run</i>
             <span>Perícias</span>
           </NavLink>
-          <NavLink to="/itens" className="link">
+          <NavLink to="/inventario" className="link">
             <i className="material-icons">backpack</i>
-            <span>Itens</span>
+            <span>Inventário</span>
           </NavLink>
           <NavLink to="/macros" className="link">
             <i className="material-icons">smart_toy</i>
