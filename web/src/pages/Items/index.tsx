@@ -18,28 +18,28 @@ import GenericState from '../../components/GenericState'
 import api from '../../services/api'
 
 const getOrder = (
-  storage: StorageData,
+  container: StorageData[] | ItemData[],
   source: number,
   destination: number,
   same: boolean
 ): number => {
-  if (storage.items.length === 0) return 1000
+  if (container.length === 0) return 1000
 
   if (destination === 0) {
-    return storage.items[0].order - 10
+    return container[0].order - 10
   }
 
-  if (destination >= storage.items.length) {
-    return storage.items[storage.items.length - 1].order + 10
+  if (destination >= container.length) {
+    return container[container.length - 1].order + 10
   }
 
-  const destiny = storage.items[destination].order
+  const destiny = container[destination].order
 
   if (destination < source || !same) {
-    const previous = storage.items?.[destination - 1]?.order ?? destiny - 20
+    const previous = container?.[destination - 1]?.order ?? destiny - 20
     return (previous + destiny) / 2
   }
-  const next = storage.items?.[destination + 1]?.order ?? destiny + 20
+  const next = container?.[destination + 1]?.order ?? destiny + 20
   return (destiny + next) / 2
 }
 
@@ -71,10 +71,9 @@ const Items: React.FC = () => {
       }
 
       if (type === 'storage') {
-        api.put('/storages/order', {
-          source: data?.[source.index]?.id,
-          destination: data?.[destination.index]?.id
-        })
+        const order = getOrder(data, source.index, destination.index, true)
+        const id = data?.[source.index]?.id
+        api.put(`/storages/${id}/order`, { order })
         const newData = produce(data, draft => {
           const [storage] = draft.splice(source.index, 1)
           draft.splice(destination.index, 0, storage)
@@ -96,7 +95,7 @@ const Items: React.FC = () => {
       ) as unknown) as StorageData
 
       const order = getOrder(
-        storage,
+        storage.items,
         source.index,
         destination.index,
         sourceId === destinationId
