@@ -75,7 +75,7 @@ const Storage: React.FC<StorageProps> = ({
             )}
           </Droppable>
 
-          <Fab color="primary" aria-label="adicionar" onClick={handleAddItem}>
+          <Fab color="default" aria-label="adicionar" onClick={handleAddItem}>
             <AddIcon />
           </Fab>
         </Container>

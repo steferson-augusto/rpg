@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { lighten } from '@material-ui/core/styles'
 
 export const Container = styled.div`
   display: flex;
@@ -34,18 +35,21 @@ export const Container = styled.div`
     transition: background-color 0.2s ease;
     flex-grow: 1;
     background-color: inherit;
-    overflow-y: auto;
 
     &.is-dragging {
-      background-color: rgba(30, 30, 30, 0.7);
+      background-color: rgba(38, 38, 38, 0.7);
     }
   }
 
   & > button {
+    background-color: #444;
+    color: ${props => lighten(props.theme.palette.primary.main, 0.3)};
     margin-top: 4px;
-    transition: border-radius 0.2s ease;
+    transition: all 0.2s ease;
 
     &:hover {
+      background-color: var(--primary);
+      color: #222;
       border-radius: 35%;
     }
   }
