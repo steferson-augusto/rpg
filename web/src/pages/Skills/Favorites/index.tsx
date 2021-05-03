@@ -14,7 +14,7 @@ import withSign from '../../../utils/withSign'
 interface FavoritesProps {
   data: Skill[]
   openDialog: ((values: DialogValues) => void) | undefined
-  mutateFavoriteSkill: (id: number) => void
+  mutateFavoriteSkill: (id: number, value: boolean) => void
 }
 
 const Favorites: React.FC<FavoritesProps> = ({
@@ -42,16 +42,15 @@ const Favorites: React.FC<FavoritesProps> = ({
   )
 
   const handleRemoveFavorite = useCallback(
-    (index: number) => () => {
+    (id: number) => () => {
       try {
-        const id = data?.[index].id
         api.put(`/skills/${id}`, { pinned: false })
-        mutateFavoriteSkill(id)
+        mutateFavoriteSkill(id, false)
       } catch {
-        console.error('Não foi possível dessfavoritar esta perícia')
+        console.error('Não foi possível desfavoritar esta perícia')
       }
     },
-    []
+    [mutateFavoriteSkill]
   )
 
   return (
@@ -74,7 +73,7 @@ const Favorites: React.FC<FavoritesProps> = ({
             </Tooltip>
 
             <Tooltip title="Remover dos favoritos">
-              <IconButton onClick={handleRemoveFavorite(index)}>
+              <IconButton onClick={handleRemoveFavorite(skill.id)}>
                 <StarIcon />
               </IconButton>
             </Tooltip>
