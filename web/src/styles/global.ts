@@ -40,8 +40,8 @@ export default createGlobalStyle`
   }
 
   .MuiAutocomplete-popper > div {
-      background-color: var(--surface-2);
-    }
+    background-color: var(--surface-2);
+  }
 
   &::-webkit-scrollbar {
     width: 10px;

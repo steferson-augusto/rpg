@@ -1,15 +1,18 @@
-import { createMuiTheme } from '@material-ui/core/styles'
+import { createMuiTheme, darken } from '@material-ui/core/styles'
 
+// #43B581
 // const primary = '#5e35b1'
-const primary = '#BB86FC'
+// const primary = '#BB86FC'
+const primary = '#43B581'
 const secondary = '#03DAC6'
+// const secondary = '#03DAC6'
 
 const theme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
       main: primary,
-      dark: '#BB86FC',
+      dark: primary,
       light: '#5e35b1'
     },
     secondary: {
@@ -34,8 +37,8 @@ const theme = createMuiTheme({
       light: '#E5E5E5'
     },
     bg: {
-      main: '#121212',
-      dark: '#121212',
+      main: '#1F1F1F',
+      dark: '#1F1F1F',
       light: '#f5f5f5'
     },
     write: {
@@ -44,8 +47,8 @@ const theme = createMuiTheme({
       light: '#333333'
     },
     surface1: {
-      main: '#222222',
-      dark: '#222222',
+      main: '#272727',
+      dark: '#272727',
       light: '#fff'
     },
     surface2: {
@@ -60,17 +63,24 @@ const theme = createMuiTheme({
   overrides: {
     MuiDrawer: {
       paper: {
-        background: '#222222'
+        background: '#272727'
       }
     },
     MuiPaper: {
       root: {
-        backgroundColor: '#222222'
+        backgroundColor: '#272727'
       }
     },
     MuiMenu: {
       paper: {
         backgroundColor: '#333333'
+      }
+    },
+    MuiButton: {
+      contained: {
+        '&:hover': {
+          backgroundColor: `${darken(primary, 0.15)} !important`
+        }
       }
     }
   }
