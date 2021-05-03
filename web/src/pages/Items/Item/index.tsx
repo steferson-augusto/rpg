@@ -33,7 +33,8 @@ const Item: React.FC<ItemProps> = ({ item, index, openMenu }) => {
               <span>{item.quantity * item.weight} kg</span>
             </h4>
             <p>
-              {item.quantity} {item.quantity > 1 ? 'unidades' : 'unidade'}
+              {item.quantity.toLocaleString()}{' '}
+              {item.quantity > 1 ? 'unidades' : 'unidade'}
             </p>
           </div>
           <IconButton onClick={handleOpenMenuItem}>
