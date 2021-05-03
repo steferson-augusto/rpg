@@ -1,7 +1,6 @@
 import React, {
   ChangeEvent,
   useCallback,
-  useEffect,
   useMemo,
   useRef,
   useState
@@ -34,7 +33,6 @@ import Conditional from '../../components/Conditional'
 
 const Skills: React.FC = () => {
   const [search, setSearch] = useState('')
-  const [filtered, setFiltered] = useState<SkillData[]>([])
   const drawerRef = useRef<DrawerHandles>(null)
   const dialogRef = useRef<DialogRollHandles>(null)
   const { user } = useAuth()
@@ -47,18 +45,19 @@ const Skills: React.FC = () => {
 
   const favorites = useMemo(() => data?.filter(skill => skill.pinned), [data])
 
-  useEffect(() => {
-    let skills: SkillData[] | undefined = []
-    if (!filtered) {
-      skills = data
+  const filtered = useMemo(() => {
+    if (!search) {
+      return data
     }
-    skills = data?.filter(skill => skill.label.includes(search.toLowerCase()))
-    setFiltered(skills || [])
+    const skills = data?.filter(skill =>
+      skill.label.includes(search.toLowerCase())
+    )
+    return skills
   }, [data, debounceSearch])
 
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value)
-  }
+  }, [])
 
   const handleAddSkill = useCallback(() => {
     drawerRef?.current?.open()
@@ -88,11 +87,11 @@ const Skills: React.FC = () => {
   )
 
   const mutateFavoriteSkill = useCallback(
-    (id: number) => {
+    (id: number, value: boolean) => {
       const newData = produce(data, draft => {
         const index = draft?.findIndex(skill => skill.id === id)
         if (index !== undefined && draft !== undefined) {
-          draft[index].pinned = !draft?.[index].pinned
+          draft[index].pinned = value
         }
       })
       mutate(newData, false)
