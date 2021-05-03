@@ -9,8 +9,7 @@ const schema = Schema.create({
 })
 
 const schemaOrder = Schema.create({
-  source: Schema.number([rules.exists({ table: 'storages', column: 'id' })]),
-  destination: Schema.number([rules.exists({ table: 'storages', column: 'id' })])
+  order: Schema.number()
 })
 
 const messages = {
@@ -38,7 +37,7 @@ export default class StoragesController {
     const userId =
       auth.user?.isMaster && request.input('userId') ? request.input('userId') : auth.user?.id
     const [{ max }] = await Storage.query().where({ userId }).max('order')
-    const order = max ? Math.floor(max + 1) : 1
+    const order = max ? Math.floor(max + 10) : 100
 
     const values = { ...data, userId, order }
 
@@ -74,32 +73,25 @@ export default class StoragesController {
     return storage
   }
 
-  public async changeOrder({ request, auth, response }: HttpContextContract) {
+  public async changeOrder({ request, auth, response, params }: HttpContextContract) {
     const data = await request.validate({
       schema: schemaOrder,
-      messages: { exists: 'Este armazém não existe' }
+      messages: { required: 'Campo obrigatório' }
     })
 
-    const source = (await Storage.find(data.source)) as Storage
-    const destination = (await Storage.find(data.destination)) as Storage
+    const storage = (await Storage.find(params.id)) as Storage
 
-    if (
-      !auth.user?.isMaster &&
-      source?.userId !== auth.user?.id &&
-      destination?.userId !== auth.user?.id
-    ) {
+    if (!auth.user?.isMaster && storage?.userId !== auth.user?.id) {
       return response.status(401).send([
         {
           field: 'general',
-          message: 'Você pode alterar apenas os seus armazéns'
+          message: 'Você pode alterar apenas os seus itens'
         }
       ])
     }
 
-    source.order = destination.order
-    destination.order = destination.order + 0.0001
-    source.save()
-    destination.save()
+    storage.order = data.order
+    storage.save()
     return response.send(204)
   }
 
