@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 import IconButton from '@material-ui/core/IconButton'
 
 import {
@@ -42,6 +43,7 @@ const Structure: React.FC = ({ children }) => {
   const { selected, players, changeSelected } = usePlayer()
   const location = useLocation()
   const open = Boolean(anchorEl)
+  const matches = useMediaQuery('(min-width:600px)')
 
   const title = useMemo(() => titles[location.pathname as keyof Titles], [
     location?.pathname
@@ -71,16 +73,18 @@ const Structure: React.FC = ({ children }) => {
 
   return (
     <Container>
-      <AppBar position="static">
+      <AppBar position="static" color="inherit">
         <Header>
-          <IconButton
-            edge="start"
-            color="default"
-            aria-label="menu"
-            onClick={handleToogleMenu}
-          >
-            <i className="material-icons">menu</i>
-          </IconButton>
+          {matches && (
+            <IconButton
+              edge="start"
+              color="default"
+              aria-label="menu"
+              onClick={handleToogleMenu}
+            >
+              <i className="material-icons">menu</i>
+            </IconButton>
+          )}
           <Mark>
             <Left>
               <h3>{title}</h3>
@@ -132,7 +136,7 @@ const Structure: React.FC = ({ children }) => {
       </AppBar>
 
       <Wrapper>
-        <Check type="checkbox" id="check" ref={ref} />
+        {matches && <Check type="checkbox" id="check" ref={ref} />}
         <Sidebar className="sidebar">
           <NavLink to="/dashboard" className="link" activeClassName="active">
             <i className="material-icons">dashboard</i>
