@@ -99,6 +99,10 @@ const Skills: React.FC = () => {
     [data]
   )
 
+  const handleCancel = useCallback(() => {
+    drawerRef?.current?.close()
+  }, [drawerRef?.current])
+
   if (loading || error) return <GenericState loading={loading} error={error} />
 
   return (
@@ -156,10 +160,7 @@ const Skills: React.FC = () => {
       </div>
 
       <Drawer ref={drawerRef}>
-        <FormSkill
-          handleCancel={drawerRef?.current?.close}
-          mutate={mutateSkill}
-        />
+        <FormSkill handleCancel={handleCancel} mutate={mutateSkill} />
       </Drawer>
       <DialogRoll ref={dialogRef} />
     </Container>
