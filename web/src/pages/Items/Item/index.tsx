@@ -13,9 +13,12 @@ interface ItemProps {
 }
 
 const Item: React.FC<ItemProps> = ({ item, index, openMenu }) => {
-  const handleOpenMenuItem = useCallback((e: MouseEvent<HTMLElement>) => {
-    openMenu(e, item, 'item')
-  }, [])
+  const handleOpenMenuItem = useCallback(
+    (e: MouseEvent<HTMLElement>) => {
+      openMenu(e, item, 'item')
+    },
+    [item]
+  )
 
   return (
     <Draggable draggableId={`item-${item.id}`} index={index}>
