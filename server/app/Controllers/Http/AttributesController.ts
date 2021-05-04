@@ -31,7 +31,7 @@ export default class AttributesController {
         .send([{ field: 'general', message: 'Este usuário não é um player' }])
     }
 
-    let attributes = await Attribute.query().where({ userId })
+    let attributes = await Attribute.query().where({ userId }).orderBy('label', 'asc')
     if (attributes.length === 0) {
       attributes = await Attribute.createMany([
         { userId, label: 'Agilidade', dices: ['d4'] },

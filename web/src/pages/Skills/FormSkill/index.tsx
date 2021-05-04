@@ -14,7 +14,7 @@ import { useAuth } from '../../../contexts/auth'
 import { usePlayer } from '../../../contexts/player'
 
 interface FormSkillProps {
-  handleCancel: (() => void) | undefined
+  handleCancel: () => void
   mutate: (skill: Skill) => void
 }
 

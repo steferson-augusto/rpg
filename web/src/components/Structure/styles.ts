@@ -22,9 +22,13 @@ export const Container = styled.div`
 export const Wrapper = styled.div`
   width: 100%;
   flex: 1;
-  max-height: calc(100vh - 40px);
+  max-height: calc(100vh - 64px);
   display: flex;
   flex-direction: row;
+
+  @media screen and (max-width: 600px) {
+    flex-direction: column-reverse;
+  }
 `
 
 export const Check = styled.input`
@@ -127,6 +131,37 @@ export const Sidebar = styled.div`
 
     &:hover {
       background-color: var(--sidebar-hover);
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 100vw;
+    height: 50px;
+    flex-direction: row;
+    padding: 0;
+    overflow: hidden;
+
+    .link {
+      flex-direction: column;
+      justify-content: center;
+      font-size: 20px;
+      text-align: center;
+      padding: 0;
+      color: #999;
+
+      i {
+        padding: 0;
+      }
+
+      span {
+        /* display: none; */
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+      }
+
+      &.active {
+        color: var(--primary);
+      }
     }
   }
 `

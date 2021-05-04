@@ -6,7 +6,9 @@ import React, {
 } from 'react'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 
-import { Container } from './styles'
+import { Container, DrawerForm as Form } from './styles'
+
+export const DrawerForm = Form
 
 export interface DrawerHandles {
   open: () => void

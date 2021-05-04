@@ -1,0 +1,123 @@
+import React, { useCallback, useEffect, useRef } from 'react'
+import { FormHandles } from '@unform/core'
+import { Button } from '@material-ui/core'
+
+import { DrawerForm } from '../../../components/Drawer/styles'
+import Input from '../../../components/Input'
+import { ItemData } from '../../../models/Item'
+import FormButton, { FormButtonHandles } from '../../../components/FormButton'
+import api from '../../../services/api'
+
+interface FormValues {
+  label: string
+  quantity: number
+  weight: number
+  storageId?: number
+}
+
+interface FormItemProps {
+  data: ItemData | null
+  storageId: number | undefined
+  mutateItem: (values: ItemData, create: boolean) => void
+  closeDrawer: (() => void) | undefined
+}
+
+const FormItem: React.FC<FormItemProps> = ({
+  data,
+  storageId,
+  mutateItem,
+  closeDrawer
+}) => {
+  const formRef = useRef<FormHandles>(null)
+  const formButtonRef = useRef<FormButtonHandles>(null)
+
+  useEffect(() => {
+    const labelRef = formRef.current?.getFieldRef('label')
+    labelRef?.current?.focus()
+  }, [])
+
+  const create = useCallback(
+    async (values: FormValues) => {
+      try {
+        const { data } = await api.post<ItemData>('/items', values)
+        mutateItem(data, true)
+        formButtonRef.current?.stopLoading()
+        closeDrawer?.()
+      } catch {
+        formButtonRef.current?.stopLoading()
+        console.error('Falha ao criar item')
+      }
+    },
+    [formButtonRef.current, closeDrawer]
+  )
+
+  const update = useCallback(
+    async (values: FormValues) => {
+      try {
+        const response = await api.put<ItemData>(`/items/${data?.id}`, values)
+        mutateItem({ ...data, ...response.data }, false)
+        formButtonRef.current?.stopLoading()
+        closeDrawer?.()
+      } catch {
+        formButtonRef.current?.stopLoading()
+        console.error('Falha ao editar item')
+      }
+    },
+    [data, formButtonRef.current, closeDrawer]
+  )
+
+  const handleSubmit = useCallback(
+    (values: FormValues) => {
+      formButtonRef.current?.startLoading()
+      const newValues: FormValues = { ...values, storageId }
+      data?.id ? update(newValues) : create(newValues)
+    },
+    [storageId, formButtonRef.current, closeDrawer]
+  )
+
+  return (
+    <DrawerForm ref={formRef} onSubmit={handleSubmit}>
+      <div className="content">
+        <h4>{data?.id ? 'Editar' : 'Adicionar'} item</h4>
+
+        <Input
+          name="label"
+          label="Nome"
+          variant="outlined"
+          defaultValue={data?.label}
+          fullWidth
+          required
+        />
+        <Input
+          name="quantity"
+          label="Quantidade"
+          variant="outlined"
+          type="number"
+          min={0}
+          defaultValue={data?.quantity}
+          fullWidth
+          required
+        />
+        <Input
+          name="weight"
+          label="Peso unitário (kg)"
+          variant="outlined"
+          type="number"
+          min={0}
+          step="any"
+          defaultValue={data?.weight}
+          fullWidth
+          required
+        />
+      </div>
+      <div className="actions">
+        <Button variant="outlined" color="primary" onClick={closeDrawer}>
+          Cancelar
+        </Button>
+        <FormButton ref={formButtonRef} editing={Boolean(data?.id)} />
+      </div>
+    </DrawerForm>
+  )
+}
+
+export default React.memo(FormItem)

@@ -20,6 +20,12 @@ Route.group(() => {
 
     Route.get('/skills/user/:id', 'SkillsController.getSkillsByUser')
     Route.resource('skills', 'SkillsController').only(['index', 'store', 'update'])
+
+    Route.get('/storages/user/:userId', 'StoragesController.index')
+    Route.put('/storages/:id/order', 'StoragesController.changeOrder')
+    Route.resource('storages', 'StoragesController').only(['store', 'update', 'destroy'])
+    Route.put('/items/:id/order', 'ItemsController.changeOrder')
+    Route.resource('items', 'ItemsController').only(['store', 'update', 'destroy'])
   }).middleware('member')
 
   Route.group(() => {

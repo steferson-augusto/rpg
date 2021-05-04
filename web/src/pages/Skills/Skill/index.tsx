@@ -40,7 +40,7 @@ interface SkillProps {
   data: SkillData
   openDialog: ((values: DialogValues) => void) | undefined
   mutateDeleteSkill: (id: number) => void
-  mutateFavoriteSkill: (id: number) => void
+  mutateFavoriteSkill: (id: number, value: boolean) => void
 }
 
 const Skill: React.FC<SkillProps> = ({
@@ -143,8 +143,9 @@ const Skill: React.FC<SkillProps> = ({
     (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
       try {
-        api.put(`/skills/${data.id}`, { pinned: !data.pinned })
-        mutateFavoriteSkill(data.id)
+        const pinned = !data.pinned
+        api.put(`/skills/${data.id}`, { pinned })
+        mutateFavoriteSkill(data.id, pinned)
       } catch {
         console.error(
           `Não foi possível ${
@@ -153,7 +154,7 @@ const Skill: React.FC<SkillProps> = ({
         )
       }
     },
-    [data]
+    [data, mutateFavoriteSkill]
   )
 
   const handleDelete = useCallback((e: MouseEvent<HTMLButtonElement>) => {
@@ -170,12 +171,13 @@ const Skill: React.FC<SkillProps> = ({
     async (e: MouseEvent<HTMLButtonElement>) => {
       setLoading(true)
       e.stopPropagation()
-      const dices = data.powerPoints !== 0 ? `${sum} ${powerPoints}` : sum
+      const dices =
+        data.powerPoints !== 0 ? `${sum} +${powerPoints.value}` : sum
       const values = await rollSkill(data.label, dices)
       openDialog?.({ title: data.label, dices, ...values })
       setLoading(false)
     },
-    [data, sum, powerPoints]
+    [data, sum, powerPoints.value]
   )
 
   const handleChangePowerPoints = useCallback(
