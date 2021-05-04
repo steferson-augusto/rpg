@@ -4,12 +4,18 @@ import { schema as Schema, rules } from '@ioc:Adonis/Core/Validator'
 import Storage from 'App/Models/Storage'
 import Item from 'App/Models/Item'
 
-const schema = Schema.create({
+const genericSchema = {
   label: Schema.string({}, [rules.minLength(3), rules.maxLength(48)]),
   quantity: Schema.number([rules.range(0, 999999999999)]),
-  weight: Schema.number([rules.range(0, 999999999999)]),
+  weight: Schema.number([rules.range(0, 999999999999)])
+}
+
+const schema = Schema.create({
+  ...genericSchema,
   storageId: Schema.number([rules.exists({ table: 'storages', column: 'id' })])
 })
+
+const schemaUpdate = Schema.create(genericSchema)
 
 const schemaOrder = Schema.create({
   order: Schema.number(),
@@ -50,7 +56,7 @@ export default class ItemsController {
   }
 
   public async update({ auth, request, response, params }: HttpContextContract) {
-    const data = await request.validate({ schema, messages })
+    const data = await request.validate({ schema: schemaUpdate, messages })
     const item = await Item.find(params.id)
 
     if (!item) {
@@ -61,7 +67,7 @@ export default class ItemsController {
         }
       ])
     }
-    const storage = await Storage.find(item?.id)
+    const storage = await Storage.find(item?.storageId)
 
     if (!auth.user?.isMaster && storage?.userId !== auth.user?.id) {
       return response.status(401).send([
@@ -113,13 +119,13 @@ export default class ItemsController {
       ])
     }
 
-    const storage = await Storage.find(item.id)
+    const storage = await Storage.find(item.storageId)
 
     if (!auth.user?.isMaster && storage?.userId !== auth.user?.id) {
       return response.status(401).send([
         {
           field: 'general',
-          message: 'Você pode apagar apenas os seus item'
+          message: 'Você pode apagar apenas os seus itens'
         }
       ])
     }
