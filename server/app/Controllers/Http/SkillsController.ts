@@ -59,7 +59,7 @@ export default class SkillsController {
     return skills
   }
 
-  public async getSkillsByUser({ params, auth, response }: HttpContextContract) {
+  public async getSkillsByUser({ params, auth, request, response }: HttpContextContract) {
     const userId = Number(auth.user?.isMaster ? params.id : auth.user?.id)
     const user = await User.find(userId)
     if (!user?.isPlayer) {
@@ -68,7 +68,10 @@ export default class SkillsController {
         .send([{ field: 'general', message: 'Este usuário não é um player' }])
     }
 
-    const skills = await Skill.query().where({ userId }).orderBy('label', 'asc')
+    const { favorites } = request.get()
+    const data = favorites === undefined ? { userId } : { userId, pinned: Number(favorites) }
+
+    const skills = await Skill.query().where(data).orderBy('label', 'asc')
     return skills
   }
 
