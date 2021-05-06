@@ -13,6 +13,7 @@ import DialogRoll, {
   DialogRollHandles,
   DialogValues
 } from '../../components/DialogRoll'
+import Skill from '../../models/Skill'
 
 const Dashboard: React.FC = () => {
   const dialogRef = useRef<DialogRollHandles>(null)
@@ -29,6 +30,12 @@ const Dashboard: React.FC = () => {
   const { data: attributes, loading: loadingAttributes } = useSwr<
     AttributeData[]
   >(`/attributes/${selected?.id}`)
+
+  const { data: skills, loading: loadingskills } = useSwr<Skill[]>(
+    `/skills/user/${selected?.id}?favorites=1`
+  )
+
+  console.log(skills)
 
   const handleOpenDialog = useCallback(
     (values: DialogValues) => {
@@ -78,7 +85,19 @@ const Dashboard: React.FC = () => {
             ))
           )}
         </Paper>
-        <Paper style={{ height: 200 }}>teste</Paper>
+        <Paper>
+          {loadingskills ? (
+            <Animation height="100px" />
+          ) : (
+            skills?.map(skill => (
+              <Dice
+                key={skill.id}
+                data={skill}
+                handleOpenDialog={handleOpenDialog}
+              />
+            ))
+          )}
+        </Paper>
         <div className="spacer" />
       </div>
       <DialogRoll ref={dialogRef} />

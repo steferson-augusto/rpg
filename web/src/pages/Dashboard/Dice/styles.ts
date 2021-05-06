@@ -25,12 +25,19 @@ export const Container = styled.div`
       font-size: 1.5rem;
       font-weight: 600;
       padding-right: 6px;
+      &::first-letter {
+        text-transform: uppercase;
+      }
     }
 
     & li:nth-child(2) {
       font-size: 1.1rem;
       font-weight: 400;
       color: #aaa;
+
+      span {
+        color: var(--primary);
+      }
     }
   }
 `
