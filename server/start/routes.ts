@@ -26,6 +26,10 @@ Route.group(() => {
     Route.resource('storages', 'StoragesController').only(['store', 'update', 'destroy'])
     Route.put('/items/:id/order', 'ItemsController.changeOrder')
     Route.resource('items', 'ItemsController').only(['store', 'update', 'destroy'])
+
+    Route.get('/character/user/:id', 'CharactersController.getByUser')
+    Route.get('/stats/user/:id', 'StatsController.getByUser')
+    Route.get('/advancements/user/:id', 'AdvancementsController.getByUser')
   }).middleware('member')
 
   Route.group(() => {
