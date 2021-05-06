@@ -58,4 +58,16 @@ export default createGlobalStyle`
     border: solid 2px transparent;
     border-radius: 10px;
   }
+
+  .without-sidebar {
+    margin-left: 0;
+  }
+
+  .full-sidebar {
+    margin-left: 230px;
+  }
+
+  .mini-sidebar {
+    margin-left: 60px;
+  }
 `

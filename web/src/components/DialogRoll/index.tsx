@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import React, {
   forwardRef,
   useCallback,
@@ -34,6 +35,8 @@ const DialogRoll: React.ForwardRefRenderFunction<DialogRollHandles> = (
     total: 0
   })
 
+  const check = document.getElementById('check') as HTMLInputElement
+
   const handleClose = useCallback(() => {
     setOpen(false)
   }, [])
@@ -47,7 +50,18 @@ const DialogRoll: React.ForwardRefRenderFunction<DialogRollHandles> = (
   }))
 
   return (
-    <Dialog onClose={handleClose} aria-labelledby="dialog-title" open={open}>
+    <Dialog
+      onClose={handleClose}
+      aria-labelledby="dialog-title"
+      open={open}
+      className={
+        check?.checked === undefined
+          ? 'without-sidebar'
+          : check?.checked
+          ? 'mini-sidebar'
+          : 'full-sidebar'
+      }
+    >
       <DialogTitle id="dialog-title">{values.title}</DialogTitle>
 
       <Content>
