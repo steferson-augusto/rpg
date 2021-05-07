@@ -63,4 +63,4 @@ const Dice: React.FC<DiceProps> = ({ data, handleOpenDialog }) => {
   )
 }
 
-export default Dice
+export default React.memo(Dice)
