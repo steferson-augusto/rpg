@@ -7,6 +7,7 @@ export default createGlobalStyle`
     --text-color: ${({ theme: { palette } }) => palette.write[palette.type]};
     --primary: ${({ theme: { palette } }) => palette.primary[palette.type]};
     --secondary: ${({ theme: { palette } }) => palette.secondary[palette.type]};
+    --error: ${({ theme: { palette } }) => palette.error[palette.type]};
     --surface-1: ${({ theme: { palette } }) => palette.surface1[palette.type]};
     --surface-2: ${({ theme: { palette } }) => palette.surface2[palette.type]};
     --bg-header: ${({ theme: { palette } }) => palette.header[palette.type]};
