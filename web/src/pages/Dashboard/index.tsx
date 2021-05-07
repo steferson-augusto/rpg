@@ -2,18 +2,23 @@ import React, { useCallback, useRef } from 'react'
 import { Paper } from '@material-ui/core'
 
 import { Container } from './styles'
+import Pool from './Pool'
+import Stat from './Stat'
+import Dice from './Dice'
 import useSwr from '../../hooks/useSWR'
 import { usePlayer } from '../../contexts/player'
 import Animation from '../../components/Animation'
-import Pool from './Pool'
-import Stat from '../../models/Stat'
-import { AttributeData } from '../../models'
-import Dice from './Dice'
+import {
+  AttributeData,
+  AdvancementData,
+  SkillData,
+  StatData
+} from '../../models'
 import DialogRoll, {
   DialogRollHandles,
   DialogValues
 } from '../../components/DialogRoll'
-import Skill from '../../models/Skill'
+import Advancement from './Advancement'
 
 const Dashboard: React.FC = () => {
   const dialogRef = useRef<DialogRollHandles>(null)
@@ -23,19 +28,25 @@ const Dashboard: React.FC = () => {
     `/character/user/${selected?.id}`
   )
 
-  const { data: pools, loading: loadingPools } = useSwr<Stat[]>(
+  const { data: pools, loading: loadingPools } = useSwr<StatData[]>(
     `/stats/user/${selected?.id}?energy=1`
   )
+
+  const { data: stats, loading: loadingStats } = useSwr<StatData[]>(
+    `/stats/user/${selected?.id}?energy=0`
+  )
+
+  const { data: advancements, loading: loadingAdvancements } = useSwr<
+    AdvancementData[]
+  >(`/advancements/user/${selected?.id}`)
 
   const { data: attributes, loading: loadingAttributes } = useSwr<
     AttributeData[]
   >(`/attributes/${selected?.id}`)
 
-  const { data: skills, loading: loadingskills } = useSwr<Skill[]>(
+  const { data: skills, loading: loadingskills } = useSwr<SkillData[]>(
     `/skills/user/${selected?.id}?favorites=1`
   )
-
-  console.log(skills)
 
   const handleOpenDialog = useCallback(
     (values: DialogValues) => {
@@ -56,11 +67,26 @@ const Dashboard: React.FC = () => {
                 <li>{character?.name}</li>
                 <li>{character?.race}</li>
               </ul>
-              <p>{character.xp} XP</p>
+              <p>{character?.xp} XP</p>
             </>
           )}
         </Paper>
-        <Paper style={{ height: 200 }}>teste</Paper>
+        <Paper>
+          {loadingStats ? (
+            <Animation height="100px" />
+          ) : (
+            stats?.map(stat => <Stat key={stat.id} data={stat} />)
+          )}
+        </Paper>
+        <Paper className="advancements">
+          {loadingAdvancements ? (
+            <Animation height="100px" />
+          ) : (
+            advancements?.map(advancement => (
+              <Advancement key={advancement.id} data={advancement} />
+            ))
+          )}
+        </Paper>
       </div>
       <div className="column">
         <Paper className="pools">
