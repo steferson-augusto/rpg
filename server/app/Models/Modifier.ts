@@ -4,8 +4,8 @@ export default class Modifier extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column({ columnName: 'user_id', serializeAs: 'userId' })
-  public userId: number
+  @column({ columnName: 'stat_id', serializeAs: 'statId' })
+  public statId: number
 
   @column()
   public label: string
