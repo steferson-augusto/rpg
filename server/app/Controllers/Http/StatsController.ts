@@ -8,6 +8,7 @@ export default class StatsController {
     const data = energy === undefined ? { userId } : { userId, energy: Number(energy) }
     const stats = await Stat.query()
       .where(data)
+      .preload('modifiers')
       .orderBy(energy === undefined ? 'label' : 'id', 'asc')
 
     return stats
