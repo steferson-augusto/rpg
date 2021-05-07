@@ -1,4 +1,5 @@
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+import Modifier from 'App/Models/Modifier'
 
 export default class Stat extends BaseModel {
   @column({ isPrimary: true })
@@ -18,4 +19,7 @@ export default class Stat extends BaseModel {
 
   @column()
   public energy: boolean
+
+  @hasMany(() => Modifier)
+  public modifiers: HasMany<typeof Modifier>
 }
