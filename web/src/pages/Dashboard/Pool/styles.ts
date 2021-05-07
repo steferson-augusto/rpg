@@ -15,9 +15,10 @@ export const Container = styled.div<Props>`
     font-size: 1.3rem;
     top: 1px;
     /* mix-blend-mode: difference; */
-    color: white;
-    text-shadow: 1px 0 0 #444, -1px 0 0 #444, 0 1px 0 #444, 0 -1px 0 #444,
-      1px 1px #444, -1px -1px 0 #444, 1px -1px 0 #444, -1px 1px 0 #444;
+    /* color: white; */
+    color: ${props => props.color || '#b0bec5'};
+    /* text-shadow: 1px 0 0 #444, -1px 0 0 #444, 0 1px 0 #444, 0 -1px 0 #444,
+      1px 1px #444, -1px -1px 0 #444, 1px -1px 0 #444, -1px 1px 0 #444; */
 
     &:first-letter {
       text-transform: uppercase;
@@ -30,7 +31,8 @@ export const Container = styled.div<Props>`
     border-radius: 5px;
 
     .MuiLinearProgress-bar {
-      background-color: ${props => props.color || '#b0bec5'};
+      /* background-color: ${props => props.color || '#b0bec5'}; */
+      background-color: #555;
       border-radius: 5px;
     }
   }
