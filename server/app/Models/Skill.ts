@@ -1,5 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { afterSave, BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+
+import Stat from 'App/Models/Stat'
+import dicesToValue from 'App/Helpers/dicesToValue'
 
 export default class Skill extends BaseModel {
   @column({ isPrimary: true })
@@ -22,6 +25,20 @@ export default class Skill extends BaseModel {
 
   @column()
   public pinned: boolean
+
+  @afterSave()
+  public static async updateParry(skill: Skill) {
+    if (skill.dices && skill.label === 'lutar') {
+      const current = Math.floor(dicesToValue(skill.dices) / 2 + 2)
+      const parry = await Stat.firstOrNew(
+        { userId: skill.userId, label: 'aparar' },
+        { userId: skill.userId, current, label: 'aparar' }
+      )
+
+      parry.current = current
+      parry.save()
+    }
+  }
 
   @column.dateTime({ autoCreate: true, serializeAs: null })
   public createdAt: DateTime
