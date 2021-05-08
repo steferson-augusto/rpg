@@ -20,21 +20,18 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { usePlayer } from '../../contexts/player'
 import { useAuth } from '../../contexts/auth'
 
-interface Titles {
-  '/dashboard': string
-  '/atributos': string
-  '/pericias': string
-  '/inventario': string
-  '/macros': string
-}
-
-const titles: Titles = {
+const titles = {
   '/dashboard': 'DASHBOARD',
   '/atributos': 'ATRIBUTOS',
   '/pericias': 'PERÍCIAS',
   '/inventario': 'INVENTÁRIO',
-  '/macros': 'MACROS'
+  '/macros': 'MACROS',
+  '/macros/forja-de-armas': 'FORJA DE ARMAS',
+  '/escudo-do-mestre': 'ESCUDO DO MESTRE',
+  '/escudo-do-mestre/vantagens': 'VANTAGENS'
 }
+
+type Titles = keyof typeof titles
 
 const Structure: React.FC = ({ children }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -45,7 +42,7 @@ const Structure: React.FC = ({ children }) => {
   const open = Boolean(anchorEl)
   const matches = useMediaQuery('(min-width:600px)')
 
-  const title = useMemo(() => titles[location.pathname as keyof Titles], [
+  const title = useMemo(() => titles[location.pathname as Titles], [
     location?.pathname
   ])
 
@@ -158,6 +155,12 @@ const Structure: React.FC = ({ children }) => {
             <i className="material-icons">smart_toy</i>
             <span>Macros</span>
           </NavLink>
+          {user?.isMaster && (
+            <NavLink to="/escudo-do-mestre" className="link">
+              <i className="material-icons">map</i>
+              <span>Escudo do Mestre</span>
+            </NavLink>
+          )}
         </Sidebar>
         <Content>{children}</Content>
       </Wrapper>
