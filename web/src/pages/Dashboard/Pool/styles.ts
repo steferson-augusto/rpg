@@ -7,6 +7,7 @@ interface Props {
 export const Container = styled.div<Props>`
   width: 100%;
   position: relative;
+  margin-top: 7px;
 
   p {
     width: 100%;
@@ -35,9 +36,5 @@ export const Container = styled.div<Props>`
       background-color: #555;
       border-radius: 5px;
     }
-  }
-
-  & + div {
-    margin-top: 6px;
   }
 `

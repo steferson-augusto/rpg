@@ -18,6 +18,7 @@ export const Container = styled.div`
     .MuiPaper-root {
       margin-bottom: 16px;
       padding: 8px;
+      position: relative;
     }
   }
 
@@ -37,6 +38,7 @@ export const Container = styled.div`
       list-style-type: none;
       color: var(--text-color);
       padding-right: 8px;
+      padding-top: 8px;
 
       & li:nth-child(1) {
         font-size: 1.8rem;
@@ -56,5 +58,20 @@ export const Container = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
+  }
+
+  .title {
+    width: 100%;
+    position: absolute;
+    top: -7px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1.6rem;
+    color: #999;
+
+    span {
+      color: var(--error);
+    }
   }
 `
