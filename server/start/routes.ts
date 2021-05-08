@@ -43,6 +43,12 @@ Route.group(() => {
 
   Route.group(() => {
     Route.resource('users', 'UsersController').only(['index'])
+    Route.resource('advancements', 'AdvancementsController').only([
+      'index',
+      'store',
+      'update',
+      'destroy'
+    ])
     Route.put('/skills/:id/power-points', 'SkillsController.updatePowerPoints')
   }).middleware('master')
 }).middleware('auth')
