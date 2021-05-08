@@ -10,7 +10,7 @@ import { usePlayer } from '../../contexts/player'
 import Animation from '../../components/Animation'
 import {
   AttributeData,
-  AdvancementData,
+  // AdvancementData,
   SkillData,
   StatData
 } from '../../models'
@@ -18,7 +18,7 @@ import DialogRoll, {
   DialogRollHandles,
   DialogValues
 } from '../../components/DialogRoll'
-import Advancement from './Advancement'
+// import Advancement from './Advancement'
 
 const Dashboard: React.FC = () => {
   const dialogRef = useRef<DialogRollHandles>(null)
@@ -36,9 +36,9 @@ const Dashboard: React.FC = () => {
     `/stats/user/${selected?.id}?energy=0`
   )
 
-  const { data: advancements, loading: loadingAdvancements } = useSwr<
-    AdvancementData[]
-  >(`/advancements/user/${selected?.id}`)
+  // const { data: advancements, loading: loadingAdvancements } = useSwr<
+  //   AdvancementData[]
+  // >(`/advancements/user/${selected?.id}`)
 
   const { data: attributes, loading: loadingAttributes } = useSwr<
     AttributeData[]
@@ -59,6 +59,7 @@ const Dashboard: React.FC = () => {
     <Container>
       <div className="column">
         <Paper className="character">
+          <h3 className="title">Personagem</h3>
           {loadingCharacter ? (
             <Animation height="50px" />
           ) : (
@@ -72,13 +73,17 @@ const Dashboard: React.FC = () => {
           )}
         </Paper>
         <Paper>
+          <h3 className="title">Status</h3>
           {loadingStats ? (
             <Animation height="100px" />
           ) : (
             stats?.map(stat => <Stat key={stat.id} data={stat} />)
           )}
         </Paper>
-        <Paper className="advancements">
+        {/* <Paper className="advancements">
+          <h3 className="title">
+            <span>DES</span>Vantagens
+          </h3>
           {loadingAdvancements ? (
             <Animation height="100px" />
           ) : (
@@ -86,10 +91,11 @@ const Dashboard: React.FC = () => {
               <Advancement key={advancement.id} data={advancement} />
             ))
           )}
-        </Paper>
+        </Paper> */}
       </div>
       <div className="column">
         <Paper className="pools">
+          <h3 className="title">Energias</h3>
           {loadingPools ? (
             <Animation height="100px" />
           ) : (
@@ -99,6 +105,7 @@ const Dashboard: React.FC = () => {
       </div>
       <div className="column">
         <Paper>
+          <h3 className="title">Atributos</h3>
           {loadingAttributes ? (
             <Animation height="100px" />
           ) : (
@@ -112,6 +119,7 @@ const Dashboard: React.FC = () => {
           )}
         </Paper>
         <Paper>
+          <h3 className="title">Perícias</h3>
           {loadingskills ? (
             <Animation height="100px" />
           ) : (
