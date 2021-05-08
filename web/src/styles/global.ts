@@ -71,4 +71,17 @@ export default createGlobalStyle`
   .mini-sidebar {
     margin-left: 60px;
   }
+
+  .discord-button {
+    background-color: #444;
+    color: var(--primary);
+    margin-top: 4px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--primary);
+      color: #222;
+      border-radius: 35%;
+    }
+  }
 `
