@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
   width: 100%;
-  max-width: 800px;
   max-height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
@@ -22,11 +21,11 @@ export const Container = styled.div`
 
     .advancement {
       width: 100%;
+      max-width: 800px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-left: 6px;
-      margin-bottom: 8px;
+      padding: 6px;
       border-radius: 4px;
       transition: all 0.3s;
 
