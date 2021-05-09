@@ -89,7 +89,7 @@ const AdvancementForm: React.FC<AdvancementFormProps> = ({
           variant="outlined"
           defaultValue={initialData?.description}
           multiline
-          rows={7}
+          rows={8}
           min={4}
           max={200}
           fullWidth
