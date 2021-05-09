@@ -11,6 +11,7 @@ export default class Stats extends BaseSchema {
       table.integer('max').nullable()
       table.integer('current').notNullable()
       table.boolean('energy').defaultTo(false)
+      table.timestamps(true)
     })
   }
 

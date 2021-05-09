@@ -9,6 +9,7 @@ export default class Advancements extends BaseSchema {
       table.string('label', 36).notNullable()
       table.text('description').notNullable()
       table.boolean('hindrance').defaultTo(false)
+      table.timestamps(true)
     })
   }
 

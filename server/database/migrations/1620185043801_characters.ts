@@ -16,6 +16,7 @@ export default class Characters extends BaseSchema {
       table.string('name', 20).notNullable()
       table.string('race', 20)
       table.integer('xp')
+      table.timestamps(true)
     })
   }
 

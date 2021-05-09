@@ -16,6 +16,7 @@ export default class Items extends BaseSchema {
       table.integer('quantity').notNullable()
       table.float('weight', 4).defaultTo(0)
       table.float('order', 4).unsigned().notNullable()
+      table.timestamps(true)
     })
   }
 

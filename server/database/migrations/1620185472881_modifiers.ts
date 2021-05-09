@@ -10,6 +10,7 @@ export default class Modifiers extends BaseSchema {
       table.string('label', 24).notNullable()
       table.integer('value').notNullable()
       table.integer('description').nullable()
+      table.timestamps(true)
     })
   }
 
