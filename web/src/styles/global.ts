@@ -84,4 +84,8 @@ export default createGlobalStyle`
       border-radius: 35%;
     }
   }
+
+  .capitalize::first-letter {
+    text-transform: uppercase;
+  }
 `
