@@ -6,7 +6,7 @@ export default class Advancements extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.string('label', 24).notNullable()
+      table.string('label', 36).notNullable()
       table.text('description').notNullable()
       table.boolean('hindrance').defaultTo(false)
     })
