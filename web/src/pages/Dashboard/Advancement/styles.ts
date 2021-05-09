@@ -5,7 +5,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3px;
+  padding: 0 3px;
   border-radius: 3px;
   transition: all 0.3s;
 
@@ -22,6 +22,11 @@ export const Container = styled.div`
     &::first-letter {
       text-transform: uppercase;
     }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
   }
 
   &:hover {
