@@ -31,8 +31,9 @@
     "types": [
       "@adonisjs/core",
       "@adonisjs/repl",
+      "@adonisjs/auth",
       "@adonisjs/lucid",
-      "@adonisjs/auth"
+      "@adonisjs/bouncer"
     ]
   }
 }

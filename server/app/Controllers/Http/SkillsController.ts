@@ -68,7 +68,7 @@ export default class SkillsController {
         .send([{ field: 'general', message: 'Este usuário não é um player' }])
     }
 
-    const { favorites } = request.get()
+    const { favorites } = request.qs()
     const data = favorites === undefined ? { userId } : { userId, pinned: Number(favorites) }
 
     const skills = await Skill.query().where(data).orderBy('label', 'asc')
