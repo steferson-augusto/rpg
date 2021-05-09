@@ -49,6 +49,7 @@ Route.group(() => {
       'update',
       'destroy'
     ])
+    Route.resource('user/advancements', 'UserAdvancementController').only(['store', 'destroy'])
     Route.put('/skills/:id/power-points', 'SkillsController.updatePowerPoints')
   }).middleware('master')
 }).middleware('auth')
