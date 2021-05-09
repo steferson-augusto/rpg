@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  max-width: 800px;
+  width: 800px;
   padding: 0 16px;
   margin: 16px auto;
   display: flex;
@@ -13,12 +13,6 @@ export const Container = styled.div`
 
     & + .column {
       margin-left: 16px;
-    }
-
-    .MuiPaper-root {
-      margin-bottom: 16px;
-      padding: 8px;
-      position: relative;
     }
   }
 
@@ -58,20 +52,5 @@ export const Container = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-  }
-
-  .title {
-    width: 100%;
-    position: absolute;
-    top: -7px;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 1.6rem;
-    color: #999;
-
-    span {
-      color: var(--error);
-    }
   }
 `
