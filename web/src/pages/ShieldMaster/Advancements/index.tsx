@@ -18,6 +18,7 @@ const Advancements: React.FC = () => {
   const { data, mutate } = useSwr<Advancement[]>('/advancements')
 
   const handleOpenDrawer = useCallback(() => {
+    setEditing(undefined)
     ref?.current?.open()
   }, [ref])
 
