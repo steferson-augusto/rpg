@@ -1,17 +1,19 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { FormHandles } from '@unform/core'
 import Button from '@material-ui/core/Button'
 
 import { Container } from './style'
-import { DrawerForm } from '../../../components/Drawer'
-import FormButton, { FormButtonHandles } from '../../../components/FormButton'
-import useSwr from '../../../hooks/useSWR'
-import Advancement from '../../../models/Advancement'
-import Animation from '../../../components/Animation'
-import SelectMultiple from '../../../components/SelectMultiple'
-import ErrorState from '../../../components/ErrorState'
-import { usePlayer } from '../../../contexts/player'
-import api from '../../../services/api'
+import { DrawerForm } from '../../../../components/Drawer'
+import FormButton, {
+  FormButtonHandles
+} from '../../../../components/FormButton'
+import useSwr from '../../../../hooks/useSWR'
+import Advancement from '../../../../models/Advancement'
+import Animation from '../../../../components/Animation'
+import SelectMultiple from '../../../../components/SelectMultiple'
+import ErrorState from '../../../../components/ErrorState'
+import { usePlayer } from '../../../../contexts/player'
+import api from '../../../../services/api'
 
 interface FormValues {
   advancements: number[]
@@ -40,11 +42,6 @@ const AdvancementForm: React.FC<AdvancementFormProps> = ({
       })) || [],
     [data]
   )
-
-  useEffect(() => {
-    const labelRef = formRef.current?.getFieldRef('label')
-    labelRef?.current?.focus()
-  }, [])
 
   const handleSubmit = useCallback(
     async (values: FormValues) => {
