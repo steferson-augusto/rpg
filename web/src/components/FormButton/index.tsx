@@ -9,6 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 interface FormButtonProps {
   editing: boolean
+  disabled?: boolean
 }
 
 export interface FormButtonHandles {
@@ -19,7 +20,7 @@ export interface FormButtonHandles {
 const FormButton: React.ForwardRefRenderFunction<
   FormButtonHandles,
   FormButtonProps
-> = ({ editing }, ref) => {
+> = ({ editing, disabled }, ref) => {
   const [loading, setLoading] = useState(false)
 
   const startLoading = useCallback(() => {
@@ -37,7 +38,7 @@ const FormButton: React.ForwardRefRenderFunction<
       type="submit"
       variant="contained"
       color="primary"
-      disabled={loading}
+      disabled={loading || disabled}
       style={{ minWidth: 109 }}
     >
       {loading ? (
