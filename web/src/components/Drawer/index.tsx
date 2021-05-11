@@ -19,10 +19,11 @@ export interface DrawerHandles {
 interface DrawerProps {
   width?: number
   children: React.ReactNode
+  onClose?: () => void
 }
 
 const Drawer: React.ForwardRefRenderFunction<DrawerHandles, DrawerProps> = (
-  { children, width = 300 },
+  { children, width = 300, onClose },
   ref
 ) => {
   const [open, setOpen] = useState(false)
@@ -34,6 +35,11 @@ const Drawer: React.ForwardRefRenderFunction<DrawerHandles, DrawerProps> = (
     [open]
   )
 
+  const close = useCallback(() => {
+    onClose?.()
+    setOpen(false)
+  }, [])
+
   useImperativeHandle(ref, () => ({
     open: toggleDrawer(true),
     close: toggleDrawer(false),
@@ -44,7 +50,7 @@ const Drawer: React.ForwardRefRenderFunction<DrawerHandles, DrawerProps> = (
     <SwipeableDrawer
       anchor="right"
       open={open}
-      onClose={toggleDrawer(false)}
+      onClose={close}
       onOpen={toggleDrawer(true)}
     >
       <Container width={width}>{children}</Container>
