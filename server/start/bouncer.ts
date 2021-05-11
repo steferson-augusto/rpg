@@ -1,3 +1,5 @@
+/* eslint-disable indent */
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-tabs */
 /**
  * Contract source: https://git.io/Jte3T
@@ -7,6 +9,13 @@
  */
 
 import Bouncer from '@ioc:Adonis/Addons/Bouncer'
+import User from 'App/Models/User'
+import Skill from 'App/Models/Skill'
+import Storage from 'App/Models/Storage'
+import Item from 'App/Models/Item'
+import Attribute from 'App/Models/Attribute'
+import Stat from 'App/Models/Stat'
+import Character from 'App/Models/Character'
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +39,18 @@ import Bouncer from '@ioc:Adonis/Addons/Bouncer'
 | NOTE: Always export the "actions" const from this file
 |****************************************************************
 */
-export const { actions } = Bouncer
+type Resource = Attribute | Skill | Storage | Stat | Character | null
+type WithoutUser = Item
+
+export const { actions } = Bouncer.define('update', (user: User, resource: Resource) => {
+  if (!resource) return Bouncer.deny('Este recurso não existe', 422)
+
+  return user.isMaster || resource?.userId === user.id
+}).define('founded', (_user: User, resource: Resource | WithoutUser) => {
+  if (!resource) return Bouncer.deny('Este recurso não existe', 422)
+
+  return true
+})
 
 /*
 |--------------------------------------------------------------------------
