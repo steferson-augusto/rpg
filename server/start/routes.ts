@@ -50,6 +50,8 @@ Route.group(() => {
       'destroy'
     ])
     Route.resource('user/advancements', 'UserAdvancementController').only(['store', 'destroy'])
+    Route.resource('stats', 'StatsController').only(['store', 'destroy', 'update'])
+    Route.resource('characters', 'CharactersController').only(['update'])
     Route.put('/skills/:id/power-points', 'SkillsController.updatePowerPoints')
   }).middleware('master')
 }).middleware('auth')
