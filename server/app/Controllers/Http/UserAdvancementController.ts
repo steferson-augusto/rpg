@@ -31,13 +31,15 @@ export default class AdvancementsController {
 
   public async destroy({ request, params, response }: HttpContextContract) {
     const { userId } = await request.validate({ schema: schemaDestroy, messages })
-    await UserAdvancement.query()
+    const userAdvancement = await UserAdvancement.query()
       .where({
         userId,
         advancementId: params.id
       })
-      .delete()
+      .first()
 
+    await userAdvancement?.delete()
+    UserAdvancement.query().where({ userId, advancementId: params.id }).delete()
     return response.send(204)
   }
 }
