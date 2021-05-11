@@ -1,35 +1,13 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Attribute from 'App/Models/Attribute'
 import { schema as Schema } from '@ioc:Adonis/Core/Validator'
-import User from 'App/Models/User'
+import dices from 'App/Helpers/dices'
 
-const schema = Schema.create({
-  dices: Schema.enumSet([
-    'd4',
-    'd6',
-    'd8',
-    'd10',
-    'd12',
-    'd12+1',
-    'd12+2',
-    'd12+3',
-    'd12+4',
-    'd12+5',
-    'd12+6'
-  ])
-})
+const schema = Schema.create({ dices: Schema.enumSet(dices) })
 
 export default class AttributesController {
-  public async show({ params, auth, response }: HttpContextContract) {
+  public async show({ params, auth }: HttpContextContract) {
     const userId = Number(auth.user?.isMaster ? params.id : auth.user?.id)
-
-    const user = await User.find(userId)
-
-    if (!user?.isPlayer) {
-      return response
-        .status(422)
-        .send([{ field: 'general', message: 'Este usuário não é um player' }])
-    }
 
     let attributes = await Attribute.query().where({ userId }).orderBy('label', 'asc')
     if (attributes.length === 0) {
@@ -44,25 +22,17 @@ export default class AttributesController {
     return attributes
   }
 
-  public async update({ request, params, auth, response }: HttpContextContract) {
+  public async update({ request, params, bouncer }: HttpContextContract) {
     const { dices } = await request.validate({
       schema,
       messages: { required: 'Campo obrigatório' }
     })
-    const attribute = await Attribute.findOrFail(params.id)
 
-    const { id: userId, isMaster } = auth.user as User
-    if (!isMaster && attribute.userId !== userId) {
-      return response.status(401).send([
-        {
-          field: 'general',
-          message: 'Operação permitida apenas para o mestre ou o próprio jogador'
-        }
-      ])
-    }
+    const attribute = (await Attribute.find(params.id)) as Attribute
+    await bouncer.authorize('update', attribute)
 
     attribute.dices = dices
-    await attribute.save()
+    await attribute?.save()
 
     return attribute
   }
