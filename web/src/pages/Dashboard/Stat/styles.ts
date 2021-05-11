@@ -5,9 +5,9 @@ export const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3px;
   border-radius: 3px;
   transition: all 0.3s;
+  cursor: pointer;
 
   ul {
     display: flex;
@@ -15,7 +15,7 @@ export const Container = styled.div`
     align-items: center;
     list-style-type: none;
     color: var(--text-color);
-    padding-right: 8px;
+    padding: 0 4px;
 
     li:nth-child(1) {
       font-size: 1.5rem;
@@ -34,8 +34,21 @@ export const Container = styled.div`
     }
   }
 
+  .visibility {
+    display: none;
+  }
+
   &:hover {
     background-color: var(--surface-2);
+
+    .visibility {
+      display: block;
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
   }
 `
 
