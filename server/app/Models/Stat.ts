@@ -9,7 +9,7 @@ export default class Stat extends BaseModel {
   @column({ columnName: 'user_id', serializeAs: 'userId' })
   public userId: number
 
-  @column()
+  @column({ prepare: (value: string) => value.toLowerCase().replace(/\s+/g, ' ').trim() })
   public label: string
 
   @column()
