@@ -39,6 +39,11 @@ export default class ExceptionHandler extends HttpExceptionHandler {
           message: 'Você não é membro de nosso servidor'
         }
       ])
+    } else if (error.code === 'E_AUTHORIZATION_FAILURE') {
+      // const [, message] = error.message.split('E_AUTHORIZATION_FAILURE: ')
+      return ctx.response.json([
+        { field: 'general', message: 'Você não possui permissão para executar esta ação' }
+      ])
     }
 
     return super.handle(error, ctx)
