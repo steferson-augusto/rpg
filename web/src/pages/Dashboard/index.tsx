@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 
 import { Container } from './styles'
 import Pool from './Pool'
@@ -10,7 +10,8 @@ import {
   AttributeData,
   AdvancementData,
   SkillData,
-  StatData
+  StatData,
+  CharacterData
 } from '../../models'
 import DialogRoll, {
   DialogRollHandles,
@@ -19,27 +20,41 @@ import DialogRoll, {
 import Card from './Card'
 import Advancement from './Advancement'
 import Drawer, { DrawerHandles } from '../../components/Drawer'
-import FormAdvancement from './FormAdvancement'
+import FormAdvancement from './Forms/FormAdvancement'
 import api from '../../services/api'
+import Conditional from '../../components/Conditional'
+import FormStat from './Forms/FormStat'
+import { useAuth } from '../../contexts/auth'
+import FormCharacter from './Forms/FormCharacter'
+import produce from 'immer'
+
+type Form = 'advancement' | 'stat' | 'character' | null
 
 const Dashboard: React.FC = () => {
+  const [formType, setFormType] = useState<Form>('advancement')
   const dialogRef = useRef<DialogRollHandles>(null)
   const drawerRef = useRef<DrawerHandles>(null)
+  const stat = useRef<StatData | null>(null)
+  const { user } = useAuth()
   const { selected } = usePlayer()
 
   const {
     data: character,
     loading: loadingCharacter,
-    error: errorCharacter
-  } = useSwr(`/character/user/${selected?.id}`)
+    error: errorCharacter,
+    mutate: mutateCharacters
+  } = useSwr<CharacterData>(`/character/user/${selected?.id}`)
 
   const { data: pools, loading: loadingPools, error: errorPools } = useSwr<
     StatData[]
   >(`/stats/user/${selected?.id}?energy=1`)
 
-  const { data: stats, loading: loadingStats, error: errorStats } = useSwr<
-    StatData[]
-  >(`/stats/user/${selected?.id}?energy=0`)
+  const {
+    data: stats,
+    loading: loadingStats,
+    error: errorStats,
+    mutate: mutateStats
+  } = useSwr<StatData[]>(`/stats/user/${selected?.id}?energy=0`)
 
   const {
     data: advancements,
@@ -65,13 +80,39 @@ const Dashboard: React.FC = () => {
     [dialogRef]
   )
 
-  const handleOpenDrawer = useCallback(() => {
-    drawerRef.current?.open()
-  }, [drawerRef])
+  const handleOpenDrawer = useCallback(
+    (type: Form) => () => {
+      setFormType(type)
+      drawerRef.current?.open()
+    },
+    [drawerRef]
+  )
+
+  const handleCloseDrawer = useCallback(() => {
+    setFormType(null)
+  }, [])
 
   const mutateAdvancement = useCallback(() => {
     mutateAdvancements(advancements, true)
-  }, [advancements])
+    mutateStats(stats, true)
+  }, [advancements, stats])
+
+  const mutateStat = useCallback(() => {
+    mutateStats(stats, true)
+  }, [stats])
+
+  const mutateCharacter = useCallback(
+    (data: CharacterData) => {
+      if (character) {
+        const newCharacter = produce(character, draft => {
+          draft.name = data.name
+          draft.race = data.race
+        })
+        mutateCharacters(newCharacter, false)
+      }
+    },
+    [character]
+  )
 
   const handleDeleteAdvancement = useCallback(
     (id: number) => async () => {
@@ -83,11 +124,21 @@ const Dashboard: React.FC = () => {
           advancement => advancement.id !== id
         )
         mutateAdvancements(newData, false)
+        mutateStats(stats, true)
       } catch {
         console.error('Falha ao remover vantagem deste usuário')
       }
     },
-    [advancements, selected]
+    [advancements, selected, stats]
+  )
+
+  const handleEditStat = useCallback(
+    (data: StatData) => () => {
+      stat.current = data
+      setFormType('stat')
+      drawerRef.current?.open()
+    },
+    [drawerRef]
   )
 
   return (
@@ -100,6 +151,10 @@ const Dashboard: React.FC = () => {
           error={errorCharacter}
           empty={false}
           loadingHeight="50px"
+          action={{
+            icon: 'edit',
+            onClick: handleOpenDrawer('character')
+          }}
         >
           <ul>
             <li>{character?.name}</li>
@@ -112,9 +167,19 @@ const Dashboard: React.FC = () => {
           loading={loadingStats}
           error={errorStats}
           empty={stats?.length === 0}
+          action={{
+            icon: 'add',
+            onClick: handleOpenDrawer('stat')
+          }}
         >
           {stats?.map(stat => (
-            <Stat key={stat.id} data={stat} />
+            <Stat
+              key={stat.id}
+              data={stat}
+              canDelete={Boolean(user?.isMaster)}
+              handleEdit={handleEditStat}
+              mutate={mutateStat}
+            />
           ))}
         </Card>
         <Card
@@ -125,7 +190,7 @@ const Dashboard: React.FC = () => {
           empty={advancements?.length === 0}
           action={{
             icon: 'add',
-            onClick: handleOpenDrawer
+            onClick: handleOpenDrawer('advancement')
           }}
         >
           {advancements?.map(advancement => (
@@ -183,11 +248,27 @@ const Dashboard: React.FC = () => {
       </div>
       <DialogRoll ref={dialogRef} />
 
-      <Drawer ref={drawerRef}>
-        <FormAdvancement
-          handleCancel={drawerRef.current?.close}
-          mutate={mutateAdvancement}
-        />
+      <Drawer ref={drawerRef} onClose={handleCloseDrawer}>
+        <Conditional visible={formType === 'advancement'}>
+          <FormAdvancement
+            handleCancel={drawerRef.current?.close}
+            mutate={mutateAdvancement}
+          />
+        </Conditional>
+        <Conditional visible={formType === 'stat'}>
+          <FormStat
+            data={stat.current}
+            handleCancel={drawerRef.current?.close}
+            mutate={mutateStat}
+          />
+        </Conditional>
+        <Conditional visible={formType === 'character'}>
+          <FormCharacter
+            data={character}
+            handleCancel={drawerRef.current?.close}
+            mutate={mutateCharacter}
+          />
+        </Conditional>
       </Drawer>
     </Container>
   )
