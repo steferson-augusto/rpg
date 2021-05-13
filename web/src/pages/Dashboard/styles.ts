@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  width: 800px;
+  max-width: 1200px;
   padding: 0 16px;
   margin: 16px auto;
   display: flex;
@@ -9,10 +9,19 @@ export const Container = styled.div`
 
   .column {
     flex: 1;
+    min-width: 265px;
     padding-bottom: 16px;
 
     & + .column {
       margin-left: 16px;
+    }
+
+    @media screen and (max-width: 650px) {
+      padding-bottom: 0;
+
+      & + .column {
+        margin-left: 0;
+      }
     }
   }
 
@@ -52,5 +61,9 @@ export const Container = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
+  }
+
+  @media screen and (max-width: 1090px) {
+    flex-wrap: wrap;
   }
 `
