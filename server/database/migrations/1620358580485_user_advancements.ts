@@ -13,7 +13,6 @@ export default class UserAdvancements extends BaseSchema {
         .references('id')
         .inTable('advancements')
         .onDelete('CASCADE')
-      table.timestamps(true)
     })
   }
 
