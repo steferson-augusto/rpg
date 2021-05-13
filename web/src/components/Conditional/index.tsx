@@ -1,7 +1,7 @@
 import React from 'react'
 
 interface ConditionalProps {
-  visible: boolean
+  visible: unknown
 }
 
 const Conditional: React.FC<ConditionalProps> = ({ visible, children }) => {
