@@ -75,4 +75,6 @@ export const { actions } = Bouncer.define('update', (user: User, resource: Resou
 | NOTE: Always export the "policies" const from this file
 |****************************************************************
 */
-export const { policies } = Bouncer.registerPolicies({})
+export const { policies } = Bouncer.registerPolicies({
+  StatPolicy: () => import('App/Policies/StatPolicy')
+})
