@@ -4,13 +4,23 @@ import { schema as Schema, rules } from '@ioc:Adonis/Core/Validator'
 
 const schema = {
   create: Schema.create({
-    label: Schema.string({}, [rules.minLength(3), rules.maxLength(24)]),
+    label: Schema.string({}, [rules.minLength(2), rules.maxLength(24)]),
     current: Schema.number(),
-    userId: Schema.number([rules.exists({ table: 'users', column: 'id' })])
+    userId: Schema.number([rules.exists({ table: 'users', column: 'id' })]),
+    max: Schema.number.optional(),
+    energy: Schema.boolean.optional()
   }),
   update: Schema.create({
-    label: Schema.string({}, [rules.minLength(3), rules.maxLength(24)]),
+    label: Schema.string({}, [rules.minLength(2), rules.maxLength(24)]),
     current: Schema.number()
+  }),
+  updatePool: Schema.create({
+    current: Schema.number()
+  }),
+  updatePoolMaster: Schema.create({
+    label: Schema.string({}, [rules.minLength(2), rules.maxLength(24)]),
+    current: Schema.number(),
+    max: Schema.number()
   })
 }
 
@@ -45,6 +55,19 @@ export default class StatsController {
 
     const stat = await Stat.find(params.id)
     await bouncer.authorize('founded', stat)
+
+    stat?.merge(data)
+    await stat?.save()
+
+    return stat
+  }
+
+  public async updatePool({ request, params, bouncer, auth }: HttpContextContract) {
+    const schemaUpdate = auth.user?.isMaster ? schema.updatePoolMaster : schema.updatePool
+    const data = await request.validate({ schema: schemaUpdate, messages })
+
+    const stat = await Stat.find(params.id)
+    await bouncer.with('StatPolicy').authorize('updatePool', stat)
 
     stat?.merge(data)
     await stat?.save()

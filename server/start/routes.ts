@@ -29,6 +29,7 @@ Route.group(() => {
 
     Route.get('/character/user/:id', 'CharactersController.getByUser')
     Route.get('/stats/user/:id', 'StatsController.getByUser')
+    Route.put('/stats/:id/pool', 'StatsController.updatePool')
     Route.get('/advancements/user/:id', 'AdvancementsController.getByUser')
   }).middleware('member')
 
