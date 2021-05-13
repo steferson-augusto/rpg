@@ -1,11 +1,13 @@
 import React from 'react'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import EditIcon from '@material-ui/icons/Edit'
 
 import { Container } from './styles'
 import Stat from '../../../models/Stat'
-import { LinearProgress } from '@material-ui/core'
 
 interface PoolProps {
   data: Stat
+  handleEdit: (data: Stat) => () => void
 }
 
 const colors = {
@@ -19,16 +21,22 @@ const colors = {
 
 type Color = keyof typeof colors
 
-const Pool: React.FC<PoolProps> = ({ data }) => {
+const Pool: React.FC<PoolProps> = ({ data, handleEdit }) => {
   return (
-    <Container color={colors[data.label as Color] || '#b0bec5'}>
+    <Container
+      color={colors[data.label as Color] || '#b0bec5'}
+      onClick={handleEdit(data)}
+    >
       <LinearProgress
         variant="determinate"
         value={(data.current * 100) / (data.max as number)}
       />
-      <p>
-        {data.label}: {data.current} / {data.max}
-      </p>
+      <div className="content">
+        <p>
+          {data.label}: {data.current} / {data.max}
+        </p>
+        <EditIcon fontSize="inherit" />
+      </div>
     </Container>
   )
 }

@@ -9,25 +9,42 @@ export const Container = styled.div<Props>`
   position: relative;
   margin-top: 7px;
 
-  p {
+  .content {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
-    text-align: center;
-    font-size: 1.3rem;
-    top: 1px;
-    /* mix-blend-mode: difference; */
-    /* color: white; */
-    color: ${props => props.color || '#b0bec5'};
-    /* text-shadow: 1px 0 0 #444, -1px 0 0 #444, 0 1px 0 #444, 0 -1px 0 #444,
-      1px 1px #444, -1px -1px 0 #444, 1px -1px 0 #444, -1px 1px 0 #444; */
+    top: 2px;
+    cursor: pointer;
 
-    &:first-letter {
-      text-transform: uppercase;
+    p {
+      text-align: center;
+      font-size: 1.3rem;
+      padding-right: 4px;
+      /* mix-blend-mode: difference; */
+      /* color: white; */
+      color: ${props => props.color || '#b0bec5'};
+      /* text-shadow: 1px 0 0 #444, -1px 0 0 #444, 0 1px 0 #444, 0 -1px 0 #444,
+    1px 1px #444, -1px -1px 0 #444, 1px -1px 0 #444, -1px 1px 0 #444; */
+
+      &:first-letter {
+        text-transform: uppercase;
+      }
+    }
+
+    svg {
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+
+    &:hover svg {
+      opacity: 1;
     }
   }
 
   .MuiLinearProgress-root {
-    height: 16px;
+    height: 20px;
     background-color: var(--surface-2);
     border-radius: 5px;
 
