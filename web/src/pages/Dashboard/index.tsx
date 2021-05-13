@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 
 import { Container } from './styles'
 import Pool from './Pool'
@@ -27,8 +27,9 @@ import FormStat from './Forms/FormStat'
 import { useAuth } from '../../contexts/auth'
 import FormCharacter from './Forms/FormCharacter'
 import produce from 'immer'
+import FormPool from './Forms/FormPool'
 
-type Form = 'advancement' | 'stat' | 'character' | null
+type Form = 'advancement' | 'stat' | 'character' | 'pool' | null
 
 const Dashboard: React.FC = () => {
   const [formType, setFormType] = useState<Form>('advancement')
@@ -45,9 +46,12 @@ const Dashboard: React.FC = () => {
     mutate: mutateCharacters
   } = useSwr<CharacterData>(`/character/user/${selected?.id}`)
 
-  const { data: pools, loading: loadingPools, error: errorPools } = useSwr<
-    StatData[]
-  >(`/stats/user/${selected?.id}?energy=1`)
+  const {
+    data: pools,
+    loading: loadingPools,
+    error: errorPools,
+    mutate: mutatePoolsSwr
+  } = useSwr<StatData[]>(`/stats/user/${selected?.id}?energy=1`)
 
   const {
     data: stats,
@@ -114,6 +118,29 @@ const Dashboard: React.FC = () => {
     [character]
   )
 
+  const mutatePools = useMemo(
+    () => ({
+      create: (pool: StatData) => {
+        const newPools = produce(pools, draft => {
+          draft?.push(pool)
+        })
+        mutatePoolsSwr(newPools, true)
+      },
+      update: (pool: StatData) => {
+        stat.current = pool
+        setFormType(null)
+        const newPools = produce(pools, draft => {
+          if (draft) {
+            const index = draft.findIndex(p => pool.id === p.id)
+            draft[index] = pool
+          }
+        })
+        mutatePoolsSwr(newPools, false)
+      }
+    }),
+    [pools, mutatePoolsSwr]
+  )
+
   const handleDeleteAdvancement = useCallback(
     (id: number) => async () => {
       try {
@@ -132,10 +159,16 @@ const Dashboard: React.FC = () => {
     [advancements, selected, stats]
   )
 
+  const handleAddPool = useCallback(() => {
+    stat.current = null
+    setFormType('pool')
+    drawerRef.current?.open()
+  }, [drawerRef])
+
   const handleEditStat = useCallback(
     (data: StatData) => () => {
       stat.current = data
-      setFormType('stat')
+      setFormType(data.energy ? 'pool' : 'stat')
       drawerRef.current?.open()
     },
     [drawerRef]
@@ -209,9 +242,13 @@ const Dashboard: React.FC = () => {
           loading={loadingPools}
           error={errorPools}
           empty={pools?.length === 0}
+          action={{
+            icon: 'add',
+            onClick: handleAddPool
+          }}
         >
           {pools?.map(pool => (
-            <Pool key={pool.id} data={pool} />
+            <Pool key={pool.id} data={pool} handleEdit={handleEditStat} />
           ))}
         </Card>
       </div>
@@ -267,6 +304,13 @@ const Dashboard: React.FC = () => {
             data={character}
             handleCancel={drawerRef.current?.close}
             mutate={mutateCharacter}
+          />
+        </Conditional>
+        <Conditional visible={formType === 'pool'}>
+          <FormPool
+            data={stat.current}
+            handleCancel={drawerRef.current?.close}
+            mutate={mutatePools}
           />
         </Conditional>
       </Drawer>
