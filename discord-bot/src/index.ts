@@ -3,6 +3,7 @@ import { Client, Intents } from 'discord.js'
 import { Interaction } from './discordjs'
 import guildMemberUpdate from './hooks/guildMemberUpdate'
 import interactionCreate from './hooks/interactionCreate'
+import message from './hooks/message'
 
 require('dotenv').config()
 
@@ -14,6 +15,8 @@ const client = new Client()
 client.on('ready', () => console.log(`Logged in as ${client?.user?.tag}!`))
 
 client.on('guildMemberUpdate', guildMemberUpdate)
+
+client.on('message', message)
 
 client.ws.on(
   'INTERACTION_CREATE' as 'READY',
