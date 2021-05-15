@@ -10,7 +10,7 @@ require('dotenv').config()
 const intents = new Intents(Intents.NON_PRIVILEGED)
 intents.add('GUILD_MEMBERS')
 
-const client = new Client()
+const client = new Client({ ws: { intents } })
 
 client.on('ready', () => console.log(`Logged in as ${client?.user?.tag}!`))
 
