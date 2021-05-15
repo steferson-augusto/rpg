@@ -1,6 +1,4 @@
 /* eslint-disable camelcase */
-import { GuildMember } from 'discord.js'
-
 export interface InteractionDataOption {
   name: string
   value: string | number
@@ -19,7 +17,25 @@ export interface Interaction {
   version: number
   type: number
   token: string
-  member: GuildMember
+  member: {
+    user: {
+      username: string
+      public_flags: number
+      id: string
+      discriminator: string
+      avatar: string
+    }
+    roles: string[]
+    premium_since: any
+    permissions: string
+    pending: boolean
+    nick: string
+    mute: boolean
+    joined_at: string
+    is_pending: boolean
+    deaf: boolean
+    avatar: any
+  }
   data: InteractionData
   channel_id: string
   application_id: string
