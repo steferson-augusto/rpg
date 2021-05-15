@@ -1,7 +1,7 @@
 import { APIMessage, Client, MessageEmbed, MessageTarget } from 'discord.js'
 
 import commands from '../commands'
-import { RingData } from '../commands/ring'
+import { AttributeData } from '../commands/attribute'
 import { Interaction } from '../discordjs'
 
 const createAPIMessage = async (
@@ -55,13 +55,13 @@ export default async function interactionCreate(
     }),
     {}
   )
-  const handler = commands?.[command as 'anel']
+  const handler = commands?.[command as 'atributo']
 
   if (!handler) {
     reply(client, interaction, '```diff\n- Este comando não existe\n```')
     return
   }
 
-  const embed = handler(data as RingData)
+  const embed = await handler(data as AttributeData, interaction)
   reply(client, interaction, embed)
 }
