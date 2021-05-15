@@ -1,2 +1,7 @@
 export type { default as DiceData } from './Dice'
 export type { default as AttributeData, AttributeLabel } from './Attribute'
+export type { default as SkillData } from './Skill'
+export type { ItemData, StorageData } from './Item'
+export type { default as StatData } from './Stat'
+export type { default as AdvancementData } from './Advancement'
+export type { default as CharacterData } from './Character'

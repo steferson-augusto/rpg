@@ -136,10 +136,10 @@ export const Sidebar = styled.div`
 
   @media screen and (max-width: 600px) {
     width: 100vw;
-    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
     flex-direction: row;
     padding: 0;
-    overflow: hidden;
 
     .link {
       flex-direction: column;

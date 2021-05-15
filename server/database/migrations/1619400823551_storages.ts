@@ -10,6 +10,7 @@ export default class Storages extends BaseSchema {
       table.boolean('verify').defaultTo(true)
       table.string('label', 20).notNullable()
       table.float('order', 4).unsigned().notNullable()
+      table.timestamps(true)
     })
   }
 

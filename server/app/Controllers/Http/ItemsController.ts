@@ -32,21 +32,15 @@ const messages = {
 }
 
 export default class ItemsController {
-  public async store({ auth, request, response }: HttpContextContract) {
+  public async store({ request, bouncer }: HttpContextContract) {
     const data = await request.validate({ schema, messages })
 
-    const storage = (await Storage.find(data.storageId)) as Storage
+    const storage = await Storage.find(data.storageId)
+    await bouncer.authorize('update', storage)
 
-    if (!auth.user?.isMaster && storage.userId !== auth.user?.id) {
-      return response.status(401).send([
-        {
-          field: 'general',
-          message: 'Você pode adicionar item apenas em seus armazéns'
-        }
-      ])
-    }
-
-    const [{ max }] = await Item.query().where({ storageId: data.storageId }).max('order')
+    const [{ max }] = ((await Item.query()
+      .where({ storageId: data.storageId })
+      .max('order')) as unknown) as Array<{ max: number }>
     const order = max ? Math.floor(max + 10) : 1000
 
     const values = { ...data, order }
@@ -55,82 +49,45 @@ export default class ItemsController {
     return item
   }
 
-  public async update({ auth, request, response, params }: HttpContextContract) {
+  public async update({ request, params, bouncer }: HttpContextContract) {
     const data = await request.validate({ schema: schemaUpdate, messages })
+
     const item = await Item.find(params.id)
+    await bouncer.authorize('founded', item)
 
-    if (!item) {
-      return response.status(422).send([
-        {
-          field: 'general',
-          message: 'Este item não existe'
-        }
-      ])
-    }
     const storage = await Storage.find(item?.storageId)
+    await bouncer.authorize('update', storage)
 
-    if (!auth.user?.isMaster && storage?.userId !== auth.user?.id) {
-      return response.status(401).send([
-        {
-          field: 'general',
-          message: 'Você pode alterar apenas seus itens'
-        }
-      ])
-    }
-
-    item.merge({ label: data.label, weight: data.weight, quantity: data.quantity })
-    await item.save()
+    item?.merge({ label: data.label, weight: data.weight, quantity: data.quantity })
+    await item?.save()
     return item
   }
 
-  public async changeOrder({ request, auth, response, params }: HttpContextContract) {
+  public async changeOrder({ request, bouncer, response, params }: HttpContextContract) {
     const data = await request.validate({
       schema: schemaOrder,
       messages: { required: 'Campo obrigatório', exists: 'Este armazém não existe' }
     })
 
-    const item = (await Item.find(params.id)) as Item
+    const item = await Item.find(params.id)
+    await bouncer.authorize('founded', item)
 
     const storage = (await Storage.find(data.storageId)) as Storage
+    await bouncer.authorize('update', storage)
 
-    if (!auth.user?.isMaster && storage?.userId !== auth.user?.id) {
-      return response.status(401).send([
-        {
-          field: 'general',
-          message: 'Você pode alterar apenas os seus itens'
-        }
-      ])
-    }
-
-    item.merge(data)
-    item.save()
+    item?.merge(data)
+    item?.save()
     return response.send(204)
   }
 
-  public async destroy({ params, auth, response }: HttpContextContract) {
+  public async destroy({ params, response, bouncer }: HttpContextContract) {
     const item = await Item.find(params.id)
+    await bouncer.authorize('founded', item)
 
-    if (!item) {
-      return response.status(422).send([
-        {
-          field: 'general',
-          message: 'Este item não existe'
-        }
-      ])
-    }
+    const storage = await Storage.find(item?.storageId)
+    await bouncer.authorize('update', storage)
 
-    const storage = await Storage.find(item.storageId)
-
-    if (!auth.user?.isMaster && storage?.userId !== auth.user?.id) {
-      return response.status(401).send([
-        {
-          field: 'general',
-          message: 'Você pode apagar apenas os seus itens'
-        }
-      ])
-    }
-
-    await item.delete()
+    await item?.delete()
     return response.status(204)
   }
 }

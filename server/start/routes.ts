@@ -26,6 +26,11 @@ Route.group(() => {
     Route.resource('storages', 'StoragesController').only(['store', 'update', 'destroy'])
     Route.put('/items/:id/order', 'ItemsController.changeOrder')
     Route.resource('items', 'ItemsController').only(['store', 'update', 'destroy'])
+
+    Route.get('/character/user/:id', 'CharactersController.getByUser')
+    Route.get('/stats/user/:id', 'StatsController.getByUser')
+    Route.put('/stats/:id/pool', 'StatsController.updatePool')
+    Route.get('/advancements/user/:id', 'AdvancementsController.getByUser')
   }).middleware('member')
 
   Route.group(() => {
@@ -39,6 +44,15 @@ Route.group(() => {
 
   Route.group(() => {
     Route.resource('users', 'UsersController').only(['index'])
+    Route.resource('advancements', 'AdvancementsController').only([
+      'index',
+      'store',
+      'update',
+      'destroy'
+    ])
+    Route.resource('user/advancements', 'UserAdvancementController').only(['store', 'destroy'])
+    Route.resource('stats', 'StatsController').only(['store', 'destroy', 'update'])
+    Route.resource('characters', 'CharactersController').only(['update'])
     Route.put('/skills/:id/power-points', 'SkillsController.updatePowerPoints')
   }).middleware('master')
 }).middleware('auth')

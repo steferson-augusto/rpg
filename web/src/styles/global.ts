@@ -7,6 +7,7 @@ export default createGlobalStyle`
     --text-color: ${({ theme: { palette } }) => palette.write[palette.type]};
     --primary: ${({ theme: { palette } }) => palette.primary[palette.type]};
     --secondary: ${({ theme: { palette } }) => palette.secondary[palette.type]};
+    --error: ${({ theme: { palette } }) => palette.error[palette.type]};
     --surface-1: ${({ theme: { palette } }) => palette.surface1[palette.type]};
     --surface-2: ${({ theme: { palette } }) => palette.surface2[palette.type]};
     --bg-header: ${({ theme: { palette } }) => palette.header[palette.type]};
@@ -39,10 +40,6 @@ export default createGlobalStyle`
     font-family: sans-serif;
   }
 
-  .MuiAutocomplete-popper > div {
-    background-color: var(--surface-2);
-  }
-
   &::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -54,8 +51,47 @@ export default createGlobalStyle`
   }
 
   &::-webkit-scrollbar-thumb {
-    box-shadow: inset 0 0 10px 10px var(--surface-2);
+    box-shadow: inset 0 0 10px 10px #444;
     border: solid 2px transparent;
     border-radius: 10px;
+  }
+
+  .without-sidebar {
+    margin-left: 0;
+  }
+
+  .full-sidebar {
+    margin-left: 230px;
+  }
+
+  .mini-sidebar {
+    margin-left: 60px;
+  }
+
+  .discord-button {
+    background-color: #444;
+    color: var(--primary);
+    margin-top: 4px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--primary);
+      color: #222;
+      border-radius: 35%;
+    }
+  }
+
+  .capitalize::first-letter {
+    text-transform: uppercase;
+  }
+
+  .MuiAutocomplete-popper > div {
+    background-color: var(--surface-2);
+  }
+
+  .PrivateSwipeArea-root-1 {
+    @media screen and (min-width: 600px) {
+      display: none;
+    }
   }
 `

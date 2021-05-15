@@ -1,23 +1,11 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema as Schema, rules } from '@ioc:Adonis/Core/Validator'
 import Skill from 'App/Models/Skill'
-import User from 'App/Models/User'
+import dices from 'App/Helpers/dices'
 
 const schema = Schema.create({
   label: Schema.string({}, [rules.minLength(3), rules.maxLength(30)]),
-  dices: Schema.enumSet([
-    'd4',
-    'd6',
-    'd8',
-    'd10',
-    'd12',
-    'd12+1',
-    'd12+2',
-    'd12+3',
-    'd12+4',
-    'd12+5',
-    'd12+6'
-  ]),
+  dices: Schema.enumSet(dices),
   powerPoints: Schema.number.optional(),
   pinned: Schema.boolean.optional(),
   userId: Schema.number.optional([rules.exists({ table: 'users', column: 'id' })])
@@ -26,19 +14,7 @@ const schema = Schema.create({
 const schemaUpdate = Schema.create({
   label: Schema.string.optional({}, [rules.minLength(3), rules.maxLength(30)]),
   pinned: Schema.boolean.optional(),
-  dices: Schema.enumSet.optional([
-    'd4',
-    'd6',
-    'd8',
-    'd10',
-    'd12',
-    'd12+1',
-    'd12+2',
-    'd12+3',
-    'd12+4',
-    'd12+5',
-    'd12+6'
-  ])
+  dices: Schema.enumSet.optional(dices)
 })
 
 const schemaPowerPoints = Schema.create({
@@ -59,16 +35,19 @@ export default class SkillsController {
     return skills
   }
 
-  public async getSkillsByUser({ params, auth, response }: HttpContextContract) {
+  public async getSkillsByUser({ params, auth, request }: HttpContextContract) {
     const userId = Number(auth.user?.isMaster ? params.id : auth.user?.id)
-    const user = await User.find(userId)
-    if (!user?.isPlayer) {
-      return response
-        .status(422)
-        .send([{ field: 'general', message: 'Este usuário não é um player' }])
-    }
+    // const user = await User.find(userId)
+    // if (!user?.isPlayer) {
+    //   return response
+    //     .status(422)
+    //     .send([{ field: 'general', message: 'Este usuário não é um player' }])
+    // }
 
-    const skills = await Skill.query().where({ userId }).orderBy('label', 'asc')
+    const { favorites } = request.qs()
+    const data = favorites === undefined ? { userId } : { userId, pinned: Number(favorites) }
+
+    const skills = await Skill.query().where(data).orderBy('label', 'asc')
     return skills
   }
 
@@ -88,73 +67,34 @@ export default class SkillsController {
     return skill
   }
 
-  public async update({ request, auth, params, response }: HttpContextContract) {
+  public async update({ request, params, bouncer }: HttpContextContract) {
     const data = await request.validate({ schema: schemaUpdate, messages })
     const skill = await Skill.find(params.id)
 
-    if (!skill) {
-      return response.status(422).send([
-        {
-          field: 'general',
-          message: 'Esta perícia não existe'
-        }
-      ])
-    }
+    await bouncer.authorize('update', skill)
 
-    if (!auth.user?.isMaster && skill.userId !== auth.user?.id) {
-      return response.status(401).send([
-        {
-          field: 'general',
-          message: 'Você pode alterar apenas as suas perícias'
-        }
-      ])
-    }
-
-    skill.merge(data)
-    await skill.save()
+    skill?.merge(data)
+    await skill?.save()
     return skill
   }
 
-  public async updatePowerPoints({ request, params, response }: HttpContextContract) {
+  public async updatePowerPoints({ request, params, bouncer }: HttpContextContract) {
     const { powerPoints } = await request.validate({ schema: schemaPowerPoints, messages })
-    const skill = await Skill.find(params.id)
+    const skill = (await Skill.find(params.id)) as Skill
 
-    if (!skill) {
-      return response.status(422).send([
-        {
-          field: 'general',
-          message: 'Esta perícia não existe'
-        }
-      ])
-    }
+    await bouncer.authorize('founded', skill)
 
     skill.powerPoints = powerPoints
     await skill.save()
     return skill
   }
 
-  public async destroy({ auth, params, response }: HttpContextContract) {
+  public async destroy({ bouncer, params, response }: HttpContextContract) {
     const skill = await Skill.find(params.id)
 
-    if (!skill) {
-      return response.status(422).send([
-        {
-          field: 'general',
-          message: 'Esta perícia não existe'
-        }
-      ])
-    }
+    await bouncer.authorize('update', skill)
 
-    if (skill.userId !== auth.user?.id) {
-      return response.status(401).send([
-        {
-          field: 'general',
-          message: 'Você pode alterar apenas as suas perícias'
-        }
-      ])
-    }
-
-    await skill.delete()
+    await skill?.delete()
     return response.status(204)
   }
 }
