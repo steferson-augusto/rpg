@@ -1,4 +1,7 @@
 {
+  "name": "rpg-discord-bot",
+  "version": "0.2.0",
+  "private": true,
   "scripts": {
     "start": "nodemon --watch \"src\" --exec \"ts-node src/index.ts\" -e ts"
   },
