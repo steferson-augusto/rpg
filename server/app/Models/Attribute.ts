@@ -20,11 +20,19 @@ export default class Attribute extends BaseModel {
   })
   public dices: string[]
 
+  @column.dateTime({ autoCreate: true, serializeAs: null })
+  public createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
+  public updatedAt: DateTime
+
   @afterSave()
   public static async updateEndurance(attribute: Attribute) {
     if (attribute.dices) {
       if (attribute.label === 'Vigor') {
-        const current = Math.floor(dicesToValue(attribute.dices) / 2 + 2)
+        const userId = attribute.userId
+        const value = dicesToValue(attribute.dices)
+        const current = Math.floor(value / 2 + 2)
         const endurance = await Stat.firstOrNew(
           { userId: attribute.userId, label: 'resistência' },
           { userId: attribute.userId, current, label: 'resistência' }
@@ -32,6 +40,16 @@ export default class Attribute extends BaseModel {
 
         endurance.current = current
         endurance.save()
+
+        await Stat.firstOrNew(
+          { userId, label: 'hp' },
+          { label: 'hp', userId, energy: true, current: value, max: value }
+        )
+
+        await Stat.firstOrNew(
+          { userId, label: 'fadiga' },
+          { label: 'fadiga', userId, energy: true, current: value, max: value }
+        )
       }
 
       const attributes = await Attribute.query().where({ userId: attribute.userId })
@@ -42,19 +60,12 @@ export default class Attribute extends BaseModel {
 
       const current = Math.floor(sum / 12)
 
-      const movement = await Stat.firstOrNew(
-        { userId: attribute.userId, label: 'movimentação' },
-        { userId: attribute.userId, current, label: 'movimentação' }
-      )
+      const movement = await Stat.query()
+        .where({ userId: attribute.userId, label: 'movimentação' })
+        .first()
 
-      movement.current = current
-      movement.save()
+      movement?.merge({ current })
+      movement?.save()
     }
   }
-
-  @column.dateTime({ autoCreate: true, serializeAs: null })
-  public createdAt: DateTime
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
-  public updatedAt: DateTime
 }
