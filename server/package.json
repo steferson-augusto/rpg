@@ -53,7 +53,7 @@
     "@adonisjs/repl": "^3.0.0",
     "discord-passport": "^1.0.0",
     "luxon": "^1.26.0",
-    "pg": "^8.6.0",
+    "mysql": "^2.18.1",
     "proxy-addr": "^2.0.6",
     "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.19"
