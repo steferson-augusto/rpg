@@ -16,6 +16,7 @@ interface CardProps {
   className?: string
   action?: {
     icon: 'add' | 'edit'
+    shouldRender?: boolean | undefined
     onClick: () => void
   }
 }
@@ -33,12 +34,16 @@ const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <Container className={className}>
-      <div className={action?.icon ? 'title with-action' : 'title'}>
+      <div
+        className={
+          action?.icon && action?.shouldRender ? 'title with-action' : 'title'
+        }
+      >
         <h3>
           <span>{preTitle}</span>
           {title}
         </h3>
-        <Conditional visible={Boolean(action?.icon)}>
+        <Conditional visible={action?.icon && action?.shouldRender}>
           <IconButton size="small" onClick={action?.onClick}>
             <Icon>{action?.icon}</Icon>
           </IconButton>

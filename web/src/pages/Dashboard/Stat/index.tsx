@@ -13,12 +13,12 @@ import api from '../../../services/api'
 
 interface StatProps {
   data: StatData
-  canDelete: boolean
+  isMaster: boolean | undefined
   handleEdit: (data: StatData) => () => void
   mutate: () => void
 }
 
-const Stat: React.FC<StatProps> = ({ data, canDelete, handleEdit, mutate }) => {
+const Stat: React.FC<StatProps> = ({ data, isMaster, handleEdit, mutate }) => {
   const value = useMemo(
     () =>
       data.current +
@@ -40,7 +40,10 @@ const Stat: React.FC<StatProps> = ({ data, canDelete, handleEdit, mutate }) => {
   )
 
   return (
-    <Container onClick={handleEdit(data)}>
+    <Container
+      onClick={handleEdit(data)}
+      className={isMaster ? 'is-master' : undefined}
+    >
       <ul>
         <li>{data.label}</li>
         <li>{value}</li>
@@ -65,7 +68,7 @@ const Stat: React.FC<StatProps> = ({ data, canDelete, handleEdit, mutate }) => {
             <InfoIcon />
           </Tooltip>
         </Conditional>
-        <Conditional visible={canDelete}>
+        <Conditional visible={isMaster}>
           <IconButton size="small" onClick={handleDelete}>
             <DeleteIcon color="error" />
           </IconButton>

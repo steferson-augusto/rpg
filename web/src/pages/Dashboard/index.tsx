@@ -186,6 +186,7 @@ const Dashboard: React.FC = () => {
           loadingHeight="50px"
           action={{
             icon: 'edit',
+            shouldRender: user?.isPlayer,
             onClick: handleOpenDrawer('character')
           }}
         >
@@ -202,6 +203,7 @@ const Dashboard: React.FC = () => {
           empty={stats?.length === 0}
           action={{
             icon: 'add',
+            shouldRender: user?.isMaster,
             onClick: handleOpenDrawer('stat')
           }}
         >
@@ -209,7 +211,7 @@ const Dashboard: React.FC = () => {
             <Stat
               key={stat.id}
               data={stat}
-              canDelete={Boolean(user?.isMaster)}
+              isMaster={user?.isMaster}
               handleEdit={handleEditStat}
               mutate={mutateStat}
             />
@@ -223,6 +225,7 @@ const Dashboard: React.FC = () => {
           empty={advancements?.length === 0}
           action={{
             icon: 'add',
+            shouldRender: user?.isMaster,
             onClick: handleOpenDrawer('advancement')
           }}
         >
@@ -244,6 +247,7 @@ const Dashboard: React.FC = () => {
           empty={pools?.length === 0}
           action={{
             icon: 'add',
+            shouldRender: user?.isMaster,
             onClick: handleAddPool
           }}
         >

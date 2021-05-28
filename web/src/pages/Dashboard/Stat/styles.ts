@@ -7,7 +7,18 @@ export const Container = styled.div`
   align-items: center;
   border-radius: 3px;
   transition: all 0.3s;
-  cursor: pointer;
+
+  &:hover {
+    background-color: var(--surface-2);
+  }
+
+  &.is-master {
+    cursor: pointer;
+
+    &:hover .visibility {
+      display: block;
+    }
+  }
 
   ul {
     display: flex;
@@ -15,7 +26,7 @@ export const Container = styled.div`
     align-items: center;
     list-style-type: none;
     color: var(--text-color);
-    padding: 0 4px;
+    padding: 2px 4px;
 
     li:nth-child(1) {
       font-size: 1.5rem;
@@ -36,14 +47,6 @@ export const Container = styled.div`
 
   .visibility {
     display: none;
-  }
-
-  &:hover {
-    background-color: var(--surface-2);
-
-    .visibility {
-      display: block;
-    }
   }
 
   .actions {
